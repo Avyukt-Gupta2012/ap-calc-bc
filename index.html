@@ -2051,10 +2051,10 @@
         var missed = missedIndices(unit);
         if (!missed.length) return;
 
-        var currentOriginal = unit.cursor;
-        var position = missed.indexOf(currentOriginal);
+        // Always open review on the first missed question in original order,
+        // instead of wherever the cursor happened to be.
         state.review = true;
-        unit.cursor = position >= 0 ? position : 0;
+        unit.cursor = 0;
       }
 
       lastViewKey = "";
