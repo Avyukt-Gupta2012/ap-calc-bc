@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>AP Calculus BC · Unit Practice</title>
+<script>
+(function () {
+  var theme = null;
+  try { theme = localStorage.getItem("calc-practice-theme"); } catch (e) {}
+  if (!theme) {
+    theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  document.documentElement.dataset.theme = theme;
+})();
+</script>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f4f5fa;
+    --glow: rgba(99, 102, 241, .11);
+    --glow-2: rgba(20, 184, 166, .06);
+    --surface: #ffffff;
+    --surface-2: #f7f8fc;
+    --surface-3: #eceef6;
+    --text: #171a2b;
+    --muted: #5d6378;
+    --faint: #6b7287;
+    --border: #e3e6f0;
+    --border-strong: #cdd2e2;
+    --accent: #4f46e5;
+    --accent-ink: #ffffff;
+    --accent-soft: #eef0ff;
+    --green: #087a55;
+    --green-soft: #e7f8f1;
+    --on-green: #ffffff;
+    --red: #cf3f4c;
+    --red-soft: #fdeef0;
+    --on-red: #ffffff;
+    --amber: #a16207;
+    --shadow: 0 30px 65px -45px rgba(20, 24, 45, .5);
+    --shadow-soft: 0 18px 40px -32px rgba(20, 24, 45, .45);
+    --sans: "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0b0d15;
+    --glow: rgba(99, 102, 241, .17);
+    --glow-2: rgba(20, 184, 166, .07);
+    --surface: #131624;
+    --surface-2: #1a1e2e;
+    --surface-3: #23283c;
+    --text: #f0f2fa;
+    --muted: #a5abbf;
+    --faint: #8b92a9;
+    --border: #272c40;
+    --border-strong: #3a4058;
+    --accent: #8b8cf9;
+    --accent-ink: #0c0e18;
+    --accent-soft: rgba(129, 140, 248, .13);
+    --green: #3ed9a0;
+    --green-soft: rgba(34, 197, 128, .13);
+    --on-green: #052018;
+    --red: #ff7d88;
+    --red-soft: rgba(244, 63, 94, .13);
+    --on-red: #2a070b;
+    --amber: #fbbf24;
+    --shadow: 0 32px 70px -45px rgba(0, 0, 0, .95);
+    --shadow-soft: 0 18px 40px -32px rgba(0, 0, 0, .9);
+  }
+
+  *,
+  *::before,
+  *::after { box-sizing: border-box; }
+
+  [hidden] { display: none !important; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--sans);
+    color: var(--text);
+    background:
+      radial-gradient(1100px 620px at 6% -14%, var(--glow), transparent 62%),
+      radial-gradient(850px 540px at 102% -4%, var(--glow-2), transparent 58%),
+      var(--bg);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  button { font: inherit; }
+  button, a { -webkit-tap-highlight-color: transparent; }
+  button:focus-visible, a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  ::selection { background: var(--accent-soft); color: var(--text); }
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+  .topbar-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    height: 74px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .brand-mark {
+    width: 42px;
+    height: 42px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.55rem;
+    line-height: 1;
+    color: #fff;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    box-shadow: 0 10px 22px -12px rgba(79, 70, 229, .85);
+    padding-bottom: 2px;
+  }
+  .brand-copy { min-width: 0; }
+  .brand-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -.015em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .brand-sub { margin-top: 2px; font-size: .76rem; color: var(--muted); }
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+  .round-hint {
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: .74rem;
+    white-space: nowrap;
+  }
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: color .16s ease, border-color .16s ease, background .16s ease;
+  }
+  .icon-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .icon-sun { display: none; }
+  [data-theme="dark"] .icon-sun { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+  .primary-btn {
+    height: 40px;
+    padding: 0 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-size: .82rem;
+    font-weight: 650;
+    cursor: pointer;
+    box-shadow: 0 10px 22px -14px color-mix(in srgb, var(--accent) 80%, transparent);
+    transition: filter .16s ease, transform .16s ease;
+  }
+  .primary-btn:hover { filter: brightness(1.06); }
+  .primary-btn:active { transform: translateY(1px); }
+  .primary-btn svg { width: 15px; height: 15px; }
+
+  /* ---------- layout ---------- */
+  .layout {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 28px 24px 64px;
+    display: grid;
+    grid-template-columns: 304px minmax(0, 1fr);
+    gap: 30px;
+    align-items: start;
+  }
+
+  /* ---------- sidebar ---------- */
+  .sidebar {
+    position: sticky;
+    top: 102px;
+    max-height: calc(100vh - 128px);
+    overflow-y: auto;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface);
+    box-shadow: var(--shadow-soft);
+    scrollbar-width: thin;
+  }
+  .sidebar-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .sidebar-label {
+    font-size: .69rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .sidebar-total {
+    font-size: .76rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .progress-track {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--surface-3);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), #8b5cf6);
+    transition: width .35s cubic-bezier(.2, .7, .3, 1);
+  }
+  .overall-sub {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 8px 0 15px;
+    font-size: .71rem;
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .unit-list { display: flex; flex-direction: column; gap: 3px; }
+  .unit-btn {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    transition: background .16s ease, border-color .16s ease;
+  }
+  .unit-btn:hover { background: var(--surface-2); }
+  .unit-btn.is-active {
+    background: var(--accent-soft);
+    border-color: color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+  .unit-num {
+    width: 28px;
+    height: 28px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: .72rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    transition: background .16s ease, color .16s ease, border-color .16s ease;
+  }
+  .unit-btn.is-active .unit-num {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+  .unit-body { flex: 1; min-width: 0; display: block; }
+  .unit-name {
+    display: block;
+    font-size: .785rem;
+    font-weight: 600;
+    letter-spacing: -.005em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .unit-meter {
+    display: block;
+    height: 3px;
+    margin-top: 6px;
+    border-radius: 99px;
+    background: var(--surface-3);
+    overflow: hidden;
+  }
+  .unit-meter > span {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    background: var(--accent);
+    transition: width .3s ease;
+  }
+  .unit-btn.is-done .unit-meter > span { background: var(--green); }
+  .unit-count {
+    flex: none;
+    font-size: .66rem;
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .unit-btn.is-done .unit-count { color: var(--green); }
+  .tip {
+    margin-top: 16px;
+    padding: 12px 13px;
+    border: 1px dashed var(--border);
+    border-radius: 13px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: .72rem;
+    line-height: 1.55;
+  }
+  .tip strong { color: var(--text); font-weight: 650; }
+
+  @media (min-width: 1025px) {
+    .unit-name {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      white-space: normal;
+      line-height: 1.32;
+    }
+  }
+
+  /* ---------- main ---------- */
+  .main { min-width: 0; }
+  .unit-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin: 4px 0 14px;
+  }
+  .eyebrow {
+    margin-bottom: 6px;
+    font-size: .69rem;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .unit-title {
+    margin: 0;
+    font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -.028em;
+    text-wrap: balance;
+  }
+  .review-btn {
+    height: 38px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    flex: none;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: .77rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: auto;
+    transition: color .16s ease, border-color .16s ease, background .16s ease;
+  }
+  .review-btn:hover:not(:disabled) {
+    color: var(--red);
+    border-color: color-mix(in srgb, var(--red) 35%, var(--border));
+  }
+  .review-btn.is-active {
+    background: var(--red-soft);
+    border-color: color-mix(in srgb, var(--red) 32%, transparent);
+    color: var(--red);
+  }
+  .review-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 11px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: .72rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .dot { width: 6px; height: 6px; flex: none; border-radius: 50%; background: var(--faint); }
+  .dot.accent { background: var(--accent); }
+  .dot.green { background: var(--green); }
+  .dot.red { background: var(--red); }
+  .dot.amber { background: var(--amber); }
+
+  /* ---------- quiz card ---------- */
+  .quiz-card {
+    padding: 30px 32px 24px;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    scroll-margin-top: 90px;
+  }
+  .q-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .q-top-left { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .q-counter {
+    font-size: .7rem;
+    font-weight: 650;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .mode-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    border: 1px solid color-mix(in srgb, var(--red) 28%, transparent);
+    border-radius: 999px;
+    background: var(--red-soft);
+    color: var(--red);
+    font-size: .64rem;
+    font-weight: 650;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .q-id {
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--surface-2);
+    color: var(--faint);
+    font-family: var(--mono);
+    font-size: .66rem;
+  }
+  .q-text {
+    margin: 0 0 22px;
+    font-family: var(--serif);
+    font-size: clamp(1.18rem, 2vw, 1.48rem);
+    font-weight: 600;
+    line-height: 1.45;
+    letter-spacing: -.01em;
+    color: var(--text);
+    text-wrap: pretty;
+    overflow-wrap: anywhere;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease, opacity .15s ease, transform .15s ease;
+  }
+  .option:hover:not(.is-locked) {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    background: var(--accent-soft);
+  }
+  .option:active:not(.is-locked) { transform: scale(.995); }
+  .option.is-locked { cursor: default; }
+  .option.is-idle { opacity: .52; }
+  .option-key {
+    width: 34px;
+    height: 34px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: .78rem;
+    font-weight: 700;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .option-text {
+    flex: 1;
+    font-family: var(--serif);
+    font-size: 1.02rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+  .option-mark {
+    width: 24px;
+    height: 24px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: .8rem;
+    font-weight: 700;
+  }
+  .option.is-correct {
+    border-color: color-mix(in srgb, var(--green) 55%, var(--border));
+    background: var(--green-soft);
+  }
+  .option.is-correct .option-key {
+    border-color: var(--green);
+    background: var(--green);
+    color: var(--on-green);
+  }
+  .option.is-correct .option-mark {
+    color: var(--green);
+    background: color-mix(in srgb, var(--green) 15%, transparent);
+  }
+  .option.is-wrong {
+    border-color: color-mix(in srgb, var(--red) 55%, var(--border));
+    background: var(--red-soft);
+  }
+  .option.is-wrong .option-key {
+    border-color: var(--red);
+    background: var(--red);
+    color: var(--on-red);
+  }
+  .option.is-wrong .option-mark {
+    color: var(--red);
+    background: color-mix(in srgb, var(--red) 15%, transparent);
+  }
+  .feedback {
+    min-height: 24px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    color: var(--muted);
+    font-size: .85rem;
+    font-weight: 500;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  .feedback.is-correct { color: var(--green); font-weight: 600; }
+  .feedback.is-wrong { color: var(--red); font-weight: 600; }
+  .quiz-footer {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+  .nav-btn {
+    height: 38px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: .77rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: border-color .16s ease, filter .16s ease, opacity .16s ease;
+  }
+  .nav-btn:hover:not(:disabled) { border-color: var(--border-strong); }
+  .nav-btn:disabled { opacity: .38; cursor: not-allowed; }
+  .nav-btn.next {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .nav-btn.next:hover:not(:disabled) { filter: brightness(1.06); }
+  .q-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+  .q-chip {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: .69rem;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease, color .15s ease, box-shadow .15s ease;
+  }
+  .q-chip:hover { border-color: var(--border-strong); }
+  .q-chip.is-correct {
+    border-color: color-mix(in srgb, var(--green) 30%, transparent);
+    background: var(--green-soft);
+    color: var(--green);
+  }
+  .q-chip.is-wrong {
+    border-color: color-mix(in srgb, var(--red) 30%, transparent);
+    background: var(--red-soft);
+    color: var(--red);
+  }
+  .q-chip.is-current {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 24%, transparent);
+  }
+  .q-chip.is-current.is-correct {
+    border-color: var(--green);
+    background: var(--green-soft);
+    color: var(--green);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--green) 24%, transparent);
+  }
+  .q-chip.is-current.is-wrong {
+    border-color: var(--red);
+    background: var(--red-soft);
+    color: var(--red);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--red) 24%, transparent);
+  }
+  .under-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    padding: 0 4px;
+    color: var(--faint);
+    font-size: .71rem;
+    line-height: 1.5;
+  }
+  .kbd-hint { display: inline-flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  kbd {
+    display: inline-block;
+    padding: 2px 5px;
+    border: 1px solid var(--border);
+    border-bottom-color: var(--border-strong);
+    border-radius: 5px;
+    background: var(--surface);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: .64rem;
+    line-height: 1.2;
+    box-shadow: 0 1px 0 var(--border);
+  }
+
+  /* ---------- error ---------- */
+  .error-panel {
+    min-height: calc(100vh - 74px);
+    display: grid;
+    place-items: center;
+    padding: 32px 24px;
+  }
+  .error-card {
+    width: min(480px, 100%);
+    padding: 32px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .error-icon {
+    width: 46px;
+    height: 46px;
+    margin: 0 auto 16px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: var(--red-soft);
+    color: var(--red);
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .error-card h2 { margin: 0 0 10px; font-size: 1.2rem; }
+  .error-card p { margin: 0 0 10px; color: var(--muted); font-size: .88rem; line-height: 1.6; }
+  .error-card code {
+    padding: 2px 5px;
+    border-radius: 5px;
+    background: var(--surface-2);
+    font-family: var(--mono);
+    font-size: .82em;
+  }
+  .error-help { font-size: .78rem !important; color: var(--faint) !important; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1024px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 22px;
+      padding-top: 22px;
+    }
+    .sidebar {
+      position: static;
+      max-height: none;
+      overflow: visible;
+      padding: 14px;
+    }
+    .sidebar-top { margin-bottom: 8px; }
+    .overall-sub { margin-bottom: 12px; }
+    .unit-list {
+      flex-direction: row;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 2px 5px;
+      scrollbar-width: thin;
+    }
+    .unit-btn {
+      flex: 0 0 218px;
+      padding: 9px 10px;
+      border-color: var(--border);
+      background: var(--surface-2);
+    }
+    .unit-btn.is-active { border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
+    .tip { display: none; }
+  }
+
+  @media (max-width: 720px) {
+    .topbar-inner { height: 64px; padding: 0 16px; }
+    .brand-mark { width: 38px; height: 38px; border-radius: 11px; font-size: 1.4rem; }
+    .round-hint { display: none; }
+    .layout { padding: 16px 14px 44px; gap: 18px; }
+    .sidebar { padding: 12px; border-radius: 16px; }
+    .quiz-card { padding: 20px 16px 18px; border-radius: 18px; }
+    .unit-head { align-items: flex-start; margin-bottom: 12px; }
+    .q-text { margin-bottom: 18px; }
+    .option { gap: 11px; padding: 12px; border-radius: 12px; }
+    .option-text { font-size: .96rem; }
+    .option-key { width: 31px; height: 31px; border-radius: 9px; }
+    .q-top { margin-bottom: 14px; }
+    .quiz-footer {
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding-top: 15px;
+    }
+    .q-nav { grid-column: 1 / -1; grid-row: 1; justify-content: flex-start; }
+    .nav-btn.prev { grid-row: 2; justify-self: start; }
+    .nav-btn.next { grid-row: 2; justify-self: end; }
+    .under-card .kbd-hint { display: none; }
+  }
+
+  @media (max-width: 430px) {
+    .brand-sub { display: none; }
+    .brand-title { font-size: .92rem; }
+    .primary-btn { padding: 0 11px; font-size: .78rem; }
+    .icon-btn { width: 38px; height: 38px; }
+    .stat { padding: 5px 9px; font-size: .68rem; }
+    .q-chip { width: 28px; height: 28px; }
+    .unit-btn { flex-basis: 196px; }
+    .unit-name { font-size: .75rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">∫</div>
+        <div class="brand-copy">
+          <div class="brand-title" id="examTitle">AP Calculus BC</div>
+          <div class="brand-sub">Random unit practice</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <span class="round-hint">15 random per unit · fixed until reload</span>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch to dark mode" title="Switch theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8Z"/>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+          </svg>
+        </button>
+        <button class="primary-btn" id="refreshBtn" type="button" title="Reload with a fresh random set">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 11a8 8 0 1 0-2.35 6.65"/>
+            <path d="M20 4v7h-7"/>
+          </svg>
+          New set
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app" id="app">
+    <div class="layout">
+      <aside class="sidebar" aria-label="Units">
+        <div class="sidebar-top">
+          <span class="sidebar-label">Units</span>
+          <span class="sidebar-total" id="overallText">0 / 0</span>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" id="overallFill"></div>
+        </div>
+        <div class="overall-sub">
+          <span id="overallCorrect">0 correct</span>
+          <span id="overallMissed">0 missed</span>
+        </div>
+        <nav class="unit-list" id="unitList" aria-label="Choose a unit"></nav>
+        <div class="tip">
+          <strong>Your set is locked for this round.</strong>
+          Switch units freely — the 15 questions stay the same so you can return to any you missed. Reload for a fresh set.
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="unit-head">
+          <div>
+            <div class="eyebrow" id="unitEyebrow">Unit 1</div>
+            <h1 class="unit-title" id="unitTitle">Loading questions…</h1>
+          </div>
+          <button class="review-btn" id="reviewBtn" type="button" disabled>Review missed</button>
+        </div>
+        <div class="stats" id="unitStats"></div>
+
+        <section class="quiz-card" id="quizCard" aria-label="Practice question">
+          <div class="q-top">
+            <div class="q-top-left">
+              <span class="q-counter" id="qCounter">Question 1 of 15</span>
+              <span class="mode-pill" id="qMode" hidden>Reviewing missed</span>
+            </div>
+            <span class="q-id" id="qId">—</span>
+          </div>
+          <h2 class="q-text" id="qText">Loading questions…</h2>
+          <div class="options" id="options"></div>
+          <div class="feedback" id="feedback" aria-live="polite"></div>
+
+          <div class="quiz-footer">
+            <button class="nav-btn prev" id="prevBtn" type="button">← Previous</button>
+            <div class="q-nav" id="qNav" aria-label="Jump to a question"></div>
+            <button class="nav-btn next" id="nextBtn" type="button">Next →</button>
+          </div>
+        </section>
+
+        <div class="under-card">
+          <span>One round per page load. Reload to reshuffle.</span>
+          <span class="kbd-hint">
+            <kbd>A</kbd><kbd>B</kbd><kbd>C</kbd><kbd>D</kbd> answer
+            <span aria-hidden="true">·</span>
+            <kbd>←</kbd><kbd>→</kbd> navigate
+          </span>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="error-panel" id="errorPanel" hidden>
+    <div class="error-card">
+      <div class="error-icon" aria-hidden="true">!</div>
+      <h2>Couldn’t start the practice set</h2>
+      <p id="errorMessage">The problem data could not be loaded.</p>
+      <p class="error-help">Make sure <code>problems.json</code> sits next to this file, then reload.</p>
+    </div>
+  </div>
+
+  <!-- Snapshot of problems.json used as a fallback when the page is opened directly from disk.
+       When served over HTTP(S), the live problems.json is fetched instead. -->
+  <script type="application/json" id="embeddedData">{"exam":"AP Calculus BC","units":[{"unit":1,"title":"Limits and Continuity","problems":[{"id":"U1-001","question":"What is lim(x→2) (x^2 - 4)/(x - 2)?","options":["0","2","4","Does not exist"],"answer":"4"},{"id":"U1-002","question":"What is lim(x→0) sin(x)/x?","options":["0","1","∞","Does not exist"],"answer":"1"},{"id":"U1-003","question":"What is lim(x→∞) (3x^2 + 2x)/(x^2 - 1)?","options":["0","2","3","∞"],"answer":"3"},{"id":"U1-004","question":"What is lim(x→3) (x^2 - 9)/(x - 3)?","options":["0","3","6","Does not exist"],"answer":"6"},{"id":"U1-005","question":"Which condition is NOT required for f to be continuous at x = a?","options":["f(a) is defined","lim(x→a) f(x) exists","lim(x→a) f(x) = f(a)","f'(a) exists"],"answer":"f'(a) exists"},{"id":"U1-006","question":"What is lim(x→0) (1 - cos x)/x?","options":["0","1","1/2","∞"],"answer":"0"},{"id":"U1-007","question":"What is lim(x→0) (e^x - 1)/x?","options":["0","1","e","∞"],"answer":"1"},{"id":"U1-008","question":"What is lim(x→∞) (5x^3 - 2x)/(2x^3 + x^2)?","options":["0","5/2","2/5","∞"],"answer":"5/2"},{"id":"U1-009","question":"If lim(x→a) f(x) = L and lim(x→a) g(x) = M, what is lim(x→a) [f(x) + g(x)]?","options":["L + M","L - M","LM","L/M"],"answer":"L + M"},{"id":"U1-010","question":"What is lim(x→0) tan(x)/x?","options":["0","1","∞","Does not exist"],"answer":"1"},{"id":"U1-011","question":"What is lim(x→2) (x^2 - 4)/(x^2 - 3x + 2)?","options":["0","2","4","Does not exist"],"answer":"4"},{"id":"U1-012","question":"What is lim(x→-1) (x^2 - 1)/(x + 1)?","options":["-2","0","2","Does not exist"],"answer":"-2"},{"id":"U1-013","question":"What is lim(x→∞) (4x^2 + 1)/(2x^2 - x)?","options":["0","2","4","∞"],"answer":"2"},{"id":"U1-014","question":"What is lim(x→0+) ln(x)?","options":["0","1","-∞","∞"],"answer":"-∞"},{"id":"U1-015","question":"What is lim(x→∞) e^(-x)?","options":["-∞","0","1","∞"],"answer":"0"},{"id":"U1-016","question":"What is lim(x→1) (x^3 - 1)/(x - 1)?","options":["0","1","3","∞"],"answer":"3"},{"id":"U1-017","question":"What is lim(x→0) (sin 2x)/x?","options":["0","1","2","1/2"],"answer":"2"},{"id":"U1-018","question":"What is lim(x→0) (1 - cos 2x)/x^2?","options":["0","1","2","4"],"answer":"2"},{"id":"U1-019","question":"If f(x) = |x|/x for x ≠ 0, what is lim(x→0-) f(x)?","options":["-1","0","1","Does not exist"],"answer":"-1"},{"id":"U1-020","question":"If f(x) = |x|/x for x ≠ 0, what is lim(x→0+) f(x)?","options":["-1","0","1","Does not exist"],"answer":"1"},{"id":"U1-021","question":"What is lim(x→0) (sqrt(x+1) - 1)/x?","options":["0","1/2","1","2"],"answer":"1/2"},{"id":"U1-022","question":"What is lim(x→∞) (x + sin x)/x?","options":["0","1","2","∞"],"answer":"1"},{"id":"U1-023","question":"What is lim(x→2) (1/(x-2) - 2/(x^2-4))?","options":["0","1/2","1","Does not exist"],"answer":"1/2"},{"id":"U1-024","question":"What is lim(x→0) (e^(2x) - 1)/x?","options":["0","1","2","e^2"],"answer":"2"},{"id":"U1-025","question":"A function f has a removable discontinuity at x = a if:","options":["f(a) is undefined but lim exists","lim f(x) does not exist","f jumps at a","f has a vertical asymptote at a"],"answer":"f(a) is undefined but lim exists"},{"id":"U1-026","question":"What is lim(x→3) (x^2 - 5x + 6)/(x - 3)?","options":["-1","0","1","3"],"answer":"1"},{"id":"U1-027","question":"What is lim(x→∞) (2x + 1)/(x - 3)?","options":["0","1","2","∞"],"answer":"2"},{"id":"U1-028","question":"What is lim(x→0) (tan 3x)/(sin 2x)?","options":["2/3","1","3/2","∞"],"answer":"3/2"},{"id":"U1-029","question":"What is lim(x→4) (sqrt(x) - 2)/(x - 4)?","options":["0","1/4","1/2","1"],"answer":"1/4"},{"id":"U1-030","question":"What is lim(x→0) (x sin(1/x))?","options":["-1","0","1","Does not exist"],"answer":"0"},{"id":"U1-031","question":"The Intermediate Value Theorem requires that f be:","options":["Differentiable on [a,b]","Continuous on [a,b]","Increasing on [a,b]","Bounded on [a,b]"],"answer":"Continuous on [a,b]"},{"id":"U1-032","question":"What is lim(x→-2) (x^2 + 4x + 4)/(x + 2)?","options":["-2","0","2","Does not exist"],"answer":"0"},{"id":"U1-033","question":"What is lim(x→0) (1 - cos x)/x^2?","options":["0","1/2","1","2"],"answer":"1/2"},{"id":"U1-034","question":"What is lim(x→∞) (3x^2 - x + 1)/(x^2 + 2)?","options":["0","1","3","∞"],"answer":"3"},{"id":"U1-035","question":"What is lim(x→0) (cos x - 1)/(x sin x)?","options":["-1/2","0","1/2","1"],"answer":"-1/2"},{"id":"U1-036","question":"What is lim(x→1) (x^2 - 1)/(x^2 - 2x + 1)?","options":["0","1","2","Does not exist"],"answer":"Does not exist"},{"id":"U1-037","question":"What is lim(x→0+) x ln x?","options":["-∞","0","1","∞"],"answer":"0"},{"id":"U1-038","question":"What is lim(x→∞) (sqrt(x^2 + 1) - x)?","options":["-1","0","1","∞"],"answer":"0"},{"id":"U1-039","question":"A function is continuous on an interval if it is continuous at:","options":["Every point in the interval","Every integer in the interval","The endpoints only","The midpoint only"],"answer":"Every point in the interval"},{"id":"U1-040","question":"What is lim(x→0) (7x)/(sin 7x)?","options":["0","1","7","1/7"],"answer":"1"},{"id":"U1-041","question":"What is lim(x→2) (x^3 - 8)/(x - 2)?","options":["0","4","8","12"],"answer":"12"},{"id":"U1-042","question":"What is lim(x→∞) (x^2 + 3)/(2x^2 - x + 1)?","options":["0","1/2","1","∞"],"answer":"1/2"},{"id":"U1-043","question":"What is lim(x→0) (sin^2 x)/x^2?","options":["0","1/2","1","2"],"answer":"1"},{"id":"U1-044","question":"What is lim(x→0) (1/x - 1/sin x)?","options":["-1","0","1","∞"],"answer":"0"},{"id":"U1-045","question":"If f(x) = (x^2 - 1)/(x - 1) for x ≠ 1 and f(1) = k, what k makes f continuous at 1?","options":["0","1","2","Undefined"],"answer":"2"},{"id":"U1-046","question":"What is lim(x→3+) (x^2 - 9)/|x - 3|?","options":["-6","0","6","Does not exist"],"answer":"6"},{"id":"U1-047","question":"What is lim(x→3-) (x^2 - 9)/|x - 3|?","options":["-6","0","6","Does not exist"],"answer":"-6"},{"id":"U1-048","question":"What is lim(x→0) (e^(3x) - 1)/(2x)?","options":["0","3/2","2/3","3"],"answer":"3/2"},{"id":"U1-049","question":"What is lim(x→∞) (4x^3 - 2x + 1)/(x^3 + x^2)?","options":["0","2","4","∞"],"answer":"4"},{"id":"U1-050","question":"What is lim(x→0) (cos x - 1)/x?","options":["-1","0","1","Does not exist"],"answer":"0"},{"id":"U1-051","question":"What is lim(x→0) (ln(1+x))/x?","options":["0","1","e","∞"],"answer":"1"},{"id":"U1-052","question":"What is lim(x→2) (1/x - 1/2)/(x - 2)?","options":["-1/4","0","1/4","1/2"],"answer":"-1/4"},{"id":"U1-053","question":"What is lim(x→0) (sqrt(4+x) - 2)/x?","options":["0","1/4","1/2","2"],"answer":"1/4"},{"id":"U1-054","question":"What is lim(x→∞) (x - sqrt(x^2 + x))?","options":["-1/2","0","1/2","∞"],"answer":"-1/2"},{"id":"U1-055","question":"A jump discontinuity occurs when:","options":["Both one-sided limits exist but are unequal","The limit is infinite","The limit equals f(a)","f(a) is undefined"],"answer":"Both one-sided limits exist but are unequal"},{"id":"U1-056","question":"What is lim(x→0) (sin 5x)/(sin 3x)?","options":["3/5","1","5/3","∞"],"answer":"5/3"},{"id":"U1-057","question":"What is lim(x→1) (ln x)/(x - 1)?","options":["0","1","e","∞"],"answer":"1"},{"id":"U1-058","question":"What is lim(x→0) (2^x - 1)/x?","options":["0","1","ln 2","2"],"answer":"ln 2"},{"id":"U1-059","question":"What is lim(x→-∞) (3x^2 + 1)/(x^2 - 2)?","options":["0","1","3","∞"],"answer":"3"},{"id":"U1-060","question":"What is lim(x→0) (x^2)/(1 - cos x)?","options":["0","1","2","∞"],"answer":"2"},{"id":"U1-061","question":"The Extreme Value Theorem requires that f be:","options":["Differentiable on [a,b]","Continuous on [a,b]","Increasing on [a,b]","Even on [a,b]"],"answer":"Continuous on [a,b]"},{"id":"U1-062","question":"What is lim(x→∞) sin(x)/x?","options":["-1","0","1","Does not exist"],"answer":"0"},{"id":"U1-063","question":"What is lim(x→4) (x - 4)/(sqrt(x) - 2)?","options":["0","2","4","8"],"answer":"4"},{"id":"U1-064","question":"What is lim(x→0) (e^x - 1 - x)/x^2?","options":["0","1/2","1","2"],"answer":"1/2"},{"id":"U1-065","question":"What is lim(x→1) (x^4 - 1)/(x - 1)?","options":["1","2","3","4"],"answer":"4"},{"id":"U1-066","question":"What is lim(x→0) (tan x - x)/x^3?","options":["0","1/3","1","3"],"answer":"1/3"},{"id":"U1-067","question":"What is lim(x→∞) (sqrt(9x^2 + 4))/(2x)?","options":["0","2/3","3/2","∞"],"answer":"3/2"},{"id":"U1-068","question":"What is lim(x→0) (1 - cos x)/(x sin x)?","options":["-1/2","0","1/2","1"],"answer":"1/2"},{"id":"U1-069","question":"What is lim(x→-1) (x^3 + 1)/(x + 1)?","options":["0","1","3","Does not exist"],"answer":"3"},{"id":"U1-070","question":"What is lim(x→0) (arcsin x)/x?","options":["0","1","π/2","∞"],"answer":"1"}]},{"unit":2,"title":"Differentiation: Definition and Basic Rules","problems":[{"id":"U2-001","question":"What is the derivative of f(x) = x^3?","options":["3x^2","x^2","3x","x^4/4"],"answer":"3x^2"},{"id":"U2-002","question":"What is the derivative of sin x?","options":["cos x","-cos x","sin x","-sin x"],"answer":"cos x"},{"id":"U2-003","question":"What is the derivative of cos x?","options":["cos x","-sin x","sin x","-cos x"],"answer":"-sin x"},{"id":"U2-004","question":"What is the derivative of e^x?","options":["e^x","xe^(x-1)","ln x","e^(x+1)"],"answer":"e^x"},{"id":"U2-005","question":"What is the derivative of ln x?","options":["1/x","x","ln x","e^x"],"answer":"1/x"},{"id":"U2-006","question":"What is the derivative of x^n?","options":["nx^(n-1)","x^(n-1)","nx^n","x^n/n"],"answer":"nx^(n-1)"},{"id":"U2-007","question":"What is d/dx (tan x)?","options":["sec^2 x","sec x tan x","cot x","-csc^2 x"],"answer":"sec^2 x"},{"id":"U2-008","question":"What is d/dx (sec x)?","options":["sec^2 x","sec x tan x","tan^2 x","-csc x cot x"],"answer":"sec x tan x"},{"id":"U2-009","question":"What is the derivative of a constant?","options":["0","1","The constant","Undefined"],"answer":"0"},{"id":"U2-010","question":"What is the product rule for (fg)'?","options":["f'g + fg'","f'g'","f'g - fg'","(f'g + fg')/g^2"],"answer":"f'g + fg'"},{"id":"U2-011","question":"What is the quotient rule for (f/g)'?","options":["(f'g - fg')/g^2","(f'g + fg')/g^2","f'/g'","(fg' - f'g)/g^2"],"answer":"(f'g - fg')/g^2"},{"id":"U2-012","question":"What is d/dx (cot x)?","options":["-csc^2 x","csc^2 x","-sec^2 x","sec^2 x"],"answer":"-csc^2 x"},{"id":"U2-013","question":"What is d/dx (csc x)?","options":["-csc x cot x","csc x cot x","-sec x tan x","sec x tan x"],"answer":"-csc x cot x"},{"id":"U2-014","question":"What is d/dx (a^x)?","options":["a^x ln a","xa^(x-1)","a^x","a^x / ln a"],"answer":"a^x ln a"},{"id":"U2-015","question":"What is d/dx (log_a x)?","options":["1/(x ln a)","ln a / x","1/x","x ln a"],"answer":"1/(x ln a)"},{"id":"U2-016","question":"If f(x) = 5x^4, what is f'(x)?","options":["20x^3","5x^3","20x^4","x^3"],"answer":"20x^3"},{"id":"U2-017","question":"If f(x) = 3x^2 + 2x, what is f'(x)?","options":["6x + 2","6x","3x + 2","6x^2 + 2"],"answer":"6x + 2"},{"id":"U2-018","question":"What is the derivative of sqrt(x)?","options":["1/(2sqrt(x))","2sqrt(x)","sqrt(x)/2","1/sqrt(x)"],"answer":"1/(2sqrt(x))"},{"id":"U2-019","question":"What is the derivative of 1/x?","options":["-1/x^2","1/x^2","ln x","-ln x"],"answer":"-1/x^2"},{"id":"U2-020","question":"If f(x) = x^2 sin x, what is f'(x)?","options":["2x sin x + x^2 cos x","2x cos x","x^2 cos x","2x sin x - x^2 cos x"],"answer":"2x sin x + x^2 cos x"},{"id":"U2-021","question":"If f(x) = (x^2 + 1)/(x - 1), what is f'(x)?","options":["(x^2 - 2x - 1)/(x-1)^2","(x^2 + 2x - 1)/(x-1)^2","(2x)/(x-1)^2","(x^2 - 1)/(x-1)^2"],"answer":"(x^2 - 2x - 1)/(x-1)^2"},{"id":"U2-022","question":"What is d/dx (e^(2x))?","options":["2e^(2x)","e^(2x)","2xe^(2x)","e^(2x)/2"],"answer":"2e^(2x)"},{"id":"U2-023","question":"What is d/dx (ln(3x))?","options":["1/x","3/x","1/(3x)","ln 3 / x"],"answer":"1/x"},{"id":"U2-024","question":"If f(x) = cos(3x), what is f'(x)?","options":["-3 sin(3x)","3 sin(3x)","-sin(3x)","3 cos(3x)"],"answer":"-3 sin(3x)"},{"id":"U2-025","question":"What is the derivative of |x| at x = 0?","options":["Does not exist","0","1","-1"],"answer":"Does not exist"},{"id":"U2-026","question":"If f(x) = x^3 - 3x, find f'(2).","options":["9","6","3","12"],"answer":"9"},{"id":"U2-027","question":"If f(x) = e^x cos x, what is f'(x)?","options":["e^x(cos x - sin x)","e^x(cos x + sin x)","e^x sin x","-e^x sin x"],"answer":"e^x(cos x - sin x)"},{"id":"U2-028","question":"What is d/dx (x ln x)?","options":["ln x + 1","ln x","1","1/x"],"answer":"ln x + 1"},{"id":"U2-029","question":"If f(x) = (2x+1)^3, what is f'(x)?","options":["6(2x+1)^2","3(2x+1)^2","2(2x+1)^2","6(2x+1)^3"],"answer":"6(2x+1)^2"},{"id":"U2-030","question":"What is the derivative of x^2 at x = 3?","options":["6","3","9","2"],"answer":"6"},{"id":"U2-031","question":"What is d/dx (sin(x^2))?","options":["2x cos(x^2)","cos(x^2)","2x sin(x^2)","x^2 cos(x^2)"],"answer":"2x cos(x^2)"},{"id":"U2-032","question":"If f(x) = sqrt(x^2 + 1), what is f'(x)?","options":["x/sqrt(x^2+1)","2x/sqrt(x^2+1)","1/sqrt(x^2+1)","x sqrt(x^2+1)"],"answer":"x/sqrt(x^2+1)"},{"id":"U2-033","question":"What is d/dx (tan(2x))?","options":["2sec^2(2x)","sec^2(2x)","2tan(2x)","sec(2x)tan(2x)"],"answer":"2sec^2(2x)"},{"id":"U2-034","question":"If f(x) = ln(x^2), what is f'(x)?","options":["2/x","1/x^2","2x","1/(2x)"],"answer":"2/x"},{"id":"U2-035","question":"What is d/dx (e^(-x))?","options":["-e^(-x)","e^(-x)","-xe^(-x)","e^x"],"answer":"-e^(-x)"},{"id":"U2-036","question":"If f(x) = x/(x+1), what is f'(x)?","options":["1/(x+1)^2","1/(x+1)","x/(x+1)^2","-1/(x+1)^2"],"answer":"1/(x+1)^2"},{"id":"U2-037","question":"What is the derivative of a linear function mx + b?","options":["m","b","mx","0"],"answer":"m"},{"id":"U2-038","question":"If f(x) = x^2 e^x, what is f'(x)?","options":["e^x(x^2 + 2x)","2x e^x","x^2 e^x","e^x(x^2 - 2x)"],"answer":"e^x(x^2 + 2x)"},{"id":"U2-039","question":"What is d/dx (cos^2 x)?","options":["-2 cos x sin x","2 cos x","-sin^2 x","2 sin x cos x"],"answer":"-2 cos x sin x"},{"id":"U2-040","question":"If f(x) = 1/x^3, what is f'(x)?","options":["-3/x^4","3/x^4","-1/x^4","1/x^4"],"answer":"-3/x^4"},{"id":"U2-041","question":"What is d/dx (sin x cos x)?","options":["cos 2x","sin 2x","cos^2 x","-cos 2x"],"answer":"cos 2x"},{"id":"U2-042","question":"If f(x) = (x+1)^5, what is f'(x)?","options":["5(x+1)^4","5(x+1)^5","(x+1)^4","4(x+1)^5"],"answer":"5(x+1)^4"},{"id":"U2-043","question":"What is d/dx (e^(x^2))?","options":["2x e^(x^2)","e^(x^2)","2x e^x","x^2 e^(x^2)"],"answer":"2x e^(x^2)"},{"id":"U2-044","question":"If f(x) = ln(sin x), what is f'(x)?","options":["cot x","tan x","csc x","sec x"],"answer":"cot x"},{"id":"U2-045","question":"What is d/dx (sqrt(1 - x^2))?","options":["-x/sqrt(1-x^2)","x/sqrt(1-x^2)","-2x/sqrt(1-x^2)","1/sqrt(1-x^2)"],"answer":"-x/sqrt(1-x^2)"},{"id":"U2-046","question":"If f(x) = x^3 ln x, what is f'(x)?","options":["3x^2 ln x + x^2","3x^2 ln x","x^2","3x^2 + x^2 ln x"],"answer":"3x^2 ln x + x^2"},{"id":"U2-047","question":"What is d/dx (tan x sec x)?","options":["sec x(sec^2 x + tan^2 x)","sec^2 x","sec^3 x","sec x tan^2 x"],"answer":"sec x(sec^2 x + tan^2 x)"},{"id":"U2-048","question":"If f(x) = e^x / x, what is f'(x)?","options":["e^x(x-1)/x^2","e^x(x+1)/x^2","e^x/x^2","e^x(x-1)/x"],"answer":"e^x(x-1)/x^2"},{"id":"U2-049","question":"What is the slope of the tangent line to y = x^3 at x = 1?","options":["3","1","0","2"],"answer":"3"},{"id":"U2-050","question":"If f(x) = cos(2x), what is f'(π/4)?","options":["-2","2","0","-1"],"answer":"-2"},{"id":"U2-051","question":"What is d/dx (ln(cos x))?","options":["-tan x","tan x","cot x","-cot x"],"answer":"-tan x"},{"id":"U2-052","question":"If f(x) = (x^2+1)^4, what is f'(x)?","options":["8x(x^2+1)^3","4(x^2+1)^3","8x(x^2+1)^4","2x(x^2+1)^3"],"answer":"8x(x^2+1)^3"},{"id":"U2-053","question":"What is d/dx (arcsin x)?","options":["1/sqrt(1-x^2)","1/(1+x^2)","-1/sqrt(1-x^2)","1/sqrt(x^2-1)"],"answer":"1/sqrt(1-x^2)"},{"id":"U2-054","question":"What is d/dx (arctan x)?","options":["1/(1+x^2)","1/sqrt(1-x^2)","-1/(1+x^2)","1/x"],"answer":"1/(1+x^2)"},{"id":"U2-055","question":"If f(x) = sin(e^x), what is f'(x)?","options":["e^x cos(e^x)","cos(e^x)","e^x sin(e^x)","sin(e^x) e^x"],"answer":"e^x cos(e^x)"},{"id":"U2-056","question":"What is d/dx (x^2 cos x)?","options":["2x cos x - x^2 sin x","2x cos x + x^2 sin x","x^2 sin x","-2x sin x"],"answer":"2x cos x - x^2 sin x"},{"id":"U2-057","question":"If f(x) = sqrt(x) ln x, what is f'(x)?","options":["(ln x)/(2sqrt(x)) + 1/sqrt(x)","(ln x)/(2sqrt(x))","1/sqrt(x)","2sqrt(x) ln x"],"answer":"(ln x)/(2sqrt(x)) + 1/sqrt(x)"},{"id":"U2-058","question":"What is d/dx (sec(3x))?","options":["3 sec(3x) tan(3x)","sec(3x) tan(3x)","3 sec^2(3x)","3 tan^2(3x)"],"answer":"3 sec(3x) tan(3x)"},{"id":"U2-059","question":"If f(x) = (2x-1)/(x+3), what is f'(x)?","options":["7/(x+3)^2","-7/(x+3)^2","7/(x+3)","(2x-1)/(x+3)^2"],"answer":"7/(x+3)^2"},{"id":"U2-060","question":"What is d/dx (csc(2x))?","options":["-2 csc(2x) cot(2x)","-csc(2x) cot(2x)","2 csc(2x) cot(2x)","2 sec(2x) tan(2x)"],"answer":"-2 csc(2x) cot(2x)"},{"id":"U2-061","question":"If f(x) = x^2 / e^x, what is f'(x)?","options":["e^(-x)(2x - x^2)","e^(-x)(2x + x^2)","2x/e^x","x^2/e^x"],"answer":"e^(-x)(2x - x^2)"},{"id":"U2-062","question":"What is d/dx (ln(x^2 + 1))?","options":["2x/(x^2+1)","1/(x^2+1)","2x","x/(x^2+1)"],"answer":"2x/(x^2+1)"},{"id":"U2-063","question":"If f(x) = tan^2 x, what is f'(x)?","options":["2 tan x sec^2 x","2 tan x","sec^4 x","2 sec^2 x"],"answer":"2 tan x sec^2 x"},{"id":"U2-064","question":"What is d/dx (e^(tan x))?","options":["e^(tan x) sec^2 x","e^(tan x)","sec^2 x","e^(tan x) tan x"],"answer":"e^(tan x) sec^2 x"},{"id":"U2-065","question":"If f(x) = x sin(2x), what is f'(x)?","options":["sin(2x) + 2x cos(2x)","2x cos(2x)","sin(2x) - 2x cos(2x)","2 sin(2x)"],"answer":"sin(2x) + 2x cos(2x)"},{"id":"U2-066","question":"What is d/dx (arccos x)?","options":["-1/sqrt(1-x^2)","1/sqrt(1-x^2)","1/(1+x^2)","-1/(1+x^2)"],"answer":"-1/sqrt(1-x^2)"},{"id":"U2-067","question":"If f(x) = ln(x)/x, what is f'(x)?","options":["(1 - ln x)/x^2","(1 + ln x)/x^2","1/x^2","-ln x/x^2"],"answer":"(1 - ln x)/x^2"},{"id":"U2-068","question":"What is d/dx (x e^(2x))?","options":["e^(2x)(1 + 2x)","e^(2x)(1 - 2x)","2e^(2x)","e^(2x)(2x)"],"answer":"e^(2x)(1 + 2x)"},{"id":"U2-069","question":"If f(x) = sqrt(cos x), what is f'(x)?","options":["-sin x/(2sqrt(cos x))","sin x/(2sqrt(cos x))","-sin x/(sqrt(cos x))","cos x/(2sqrt(cos x))"],"answer":"-sin x/(2sqrt(cos x))"},{"id":"U2-070","question":"What is the derivative of arcsin(x/2)?","options":["1/sqrt(4-x^2)","1/sqrt(1-x^2/4)","2/sqrt(4-x^2)","1/(2sqrt(1-x^2))"],"answer":"1/sqrt(4-x^2)"}]},{"unit":3,"title":"Differentiation: Composite, Implicit, and Inverse Functions","problems":[{"id":"U3-001","question":"What is d/dx (sin(x^2))?","options":["2x cos(x^2)","cos(x^2)","2x sin(x^2)","x^2 cos(x^2)"],"answer":"2x cos(x^2)"},{"id":"U3-002","question":"What is the chain rule for (f(g(x)))'?","options":["f'(g(x)) g'(x)","f'(x) g'(x)","f(g'(x))","f'(g'(x))"],"answer":"f'(g(x)) g'(x)"},{"id":"U3-003","question":"If y = (3x+1)^4, find dy/dx.","options":["12(3x+1)^3","4(3x+1)^3","12(3x+1)^4","3(3x+1)^3"],"answer":"12(3x+1)^3"},{"id":"U3-004","question":"What is d/dx (e^(3x^2))?","options":["6x e^(3x^2)","e^(3x^2)","3x^2 e^(3x^2)","6x e^(3x)"],"answer":"6x e^(3x^2)"},{"id":"U3-005","question":"What is d/dx (ln(5x + 2))?","options":["5/(5x+2)","1/(5x+2)","5/(ln(5x+2))","1/(5x)"],"answer":"5/(5x+2)"},{"id":"U3-006","question":"If y = sin^2 x, find dy/dx.","options":["2 sin x cos x","2 cos x","-2 sin x cos x","sin 2x"],"answer":"2 sin x cos x"},{"id":"U3-007","question":"If y = sqrt(3x+4), find dy/dx.","options":["3/(2sqrt(3x+4))","1/(2sqrt(3x+4))","3/sqrt(3x+4)","2sqrt(3x+4)"],"answer":"3/(2sqrt(3x+4))"},{"id":"U3-008","question":"What is d/dx (cos(x^3))?","options":["-3x^2 sin(x^3)","3x^2 sin(x^3)","-sin(x^3)","3x^2 cos(x^3)"],"answer":"-3x^2 sin(x^3)"},{"id":"U3-009","question":"If x^2 + y^2 = 25, what is dy/dx?","options":["-x/y","x/y","-y/x","y/x"],"answer":"-x/y"},{"id":"U3-010","question":"If xy = 6, what is dy/dx?","options":["-y/x","y/x","-x/y","x/y"],"answer":"-y/x"},{"id":"U3-011","question":"If y = e^(sin x), find dy/dx.","options":["cos x e^(sin x)","e^(sin x)","sin x e^(sin x)","cos x"],"answer":"cos x e^(sin x)"},{"id":"U3-012","question":"What is d/dx (tan(x^2))?","options":["2x sec^2(x^2)","sec^2(x^2)","2x tan(x^2)","2 sec^2(x^2)"],"answer":"2x sec^2(x^2)"},{"id":"U3-013","question":"If y = (x^2+1)^3, find dy/dx.","options":["6x(x^2+1)^2","3(x^2+1)^2","6x(x^2+1)^3","2x(x^2+1)^2"],"answer":"6x(x^2+1)^2"},{"id":"U3-014","question":"What is d/dx (ln(sin x))?","options":["cot x","tan x","csc x","sec x"],"answer":"cot x"},{"id":"U3-015","question":"What is d/dx (arcsin(2x))?","options":["2/sqrt(1-4x^2)","1/sqrt(1-4x^2)","2/sqrt(1-2x^2)","1/sqrt(1-x^2)"],"answer":"2/sqrt(1-4x^2)"},{"id":"U3-016","question":"If y = x^2 y^3 + 1, what is dy/dx?","options":["(2xy^3)/(1 - 3x^2 y^2)","(2xy^3)/(1 + 3x^2 y^2)","(3x^2 y^2)/(1 - 2xy^3)","2xy^3 - 3x^2 y^2"],"answer":"(2xy^3)/(1 - 3x^2 y^2)"},{"id":"U3-017","question":"If y = arctan(3x), find dy/dx.","options":["3/(1+9x^2)","1/(1+9x^2)","3/(1+3x^2)","1/(1+3x^2)"],"answer":"3/(1+9x^2)"},{"id":"U3-018","question":"What is d/dx (e^(cos x))?","options":["-sin x e^(cos x)","sin x e^(cos x)","-cos x e^(sin x)","e^(cos x)"],"answer":"-sin x e^(cos x)"},{"id":"U3-019","question":"If y = sqrt(sin x), find dy/dx.","options":["cos x/(2sqrt(sin x))","sin x/(2sqrt(sin x))","cos x/sqrt(sin x)","2cos x sqrt(sin x)"],"answer":"cos x/(2sqrt(sin x))"},{"id":"U3-020","question":"If x^3 + y^3 = 6xy, what is dy/dx?","options":["(2y - x^2)/(y^2 - 2x)","(2y + x^2)/(y^2 + 2x)","(x^2 - 2y)/(y^2 - 2x)","(x^2 + 2y)/(y^2 + 2x)"],"answer":"(2y - x^2)/(y^2 - 2x)"},{"id":"U3-021","question":"What is d/dx (sec^2 x)?","options":["2 sec^2 x tan x","2 sec x tan x","sec^2 x tan x","2 sec^3 x"],"answer":"2 sec^2 x tan x"},{"id":"U3-022","question":"If y = ln(x^2 + 1), find dy/dx.","options":["2x/(x^2+1)","1/(x^2+1)","2x","x/(x^2+1)"],"answer":"2x/(x^2+1)"},{"id":"U3-023","question":"What is d/dx (arctan(e^x))?","options":["e^x/(1+e^(2x))","e^x/(1+e^x)","1/(1+e^(2x))","e^x/(1+x^2)"],"answer":"e^x/(1+e^(2x))"},{"id":"U3-024","question":"If y = (sin x)^x, find dy/dx.","options":["(sin x)^x (ln(sin x) + x cot x)","(sin x)^x (ln(sin x) - x cot x)","(sin x)^x x cot x","(sin x)^x ln(sin x)"],"answer":"(sin x)^x (ln(sin x) + x cot x)"},{"id":"U3-025","question":"If y = x^x, find dy/dx.","options":["x^x(ln x + 1)","x^x ln x","x^x","x^(x-1)"],"answer":"x^x(ln x + 1)"},{"id":"U3-026","question":"What is d/dx (csc(x^2))?","options":["-2x csc(x^2) cot(x^2)","2x csc(x^2) cot(x^2)","-csc(x^2) cot(x^2)","2x csc^2(x^2)"],"answer":"-2x csc(x^2) cot(x^2)"},{"id":"U3-027","question":"If y = e^(x^2 + 1), find dy/dx.","options":["2x e^(x^2+1)","e^(x^2+1)","2x e^(2x)","(x^2+1)e^(x^2)"],"answer":"2x e^(x^2+1)"},{"id":"U3-028","question":"What is d/dx (sqrt(ln x))?","options":["1/(2x sqrt(ln x))","1/(2sqrt(ln x))","1/(x sqrt(ln x))","2x sqrt(ln x)"],"answer":"1/(2x sqrt(ln x))"},{"id":"U3-029","question":"If y = arccos(x^2), find dy/dx.","options":["-2x/sqrt(1-x^4)","2x/sqrt(1-x^4)","-1/sqrt(1-x^4)","-2x/sqrt(1-x^2)"],"answer":"-2x/sqrt(1-x^4)"},{"id":"U3-030","question":"If y = tan(e^x), find dy/dx.","options":["e^x sec^2(e^x)","sec^2(e^x)","e^x tan(e^x)","e^x sec^2(x)"],"answer":"e^x sec^2(e^x)"},{"id":"U3-031","question":"If x^2 + xy + y^2 = 7, what is dy/dx?","options":["-(2x+y)/(x+2y)","(2x+y)/(x+2y)","-(x+2y)/(2x+y)","(x+2y)/(2x+y)"],"answer":"-(2x+y)/(x+2y)"},{"id":"U3-032","question":"What is d/dx (ln(sec x))?","options":["tan x","sec x","cot x","sec x tan x"],"answer":"tan x"},{"id":"U3-033","question":"If y = 2^(x^2), find dy/dx.","options":["2x ln 2 * 2^(x^2)","ln 2 * 2^(x^2)","2x * 2^(x^2)","x^2 ln 2 * 2^(x^2)"],"answer":"2x ln 2 * 2^(x^2)"},{"id":"U3-034","question":"If y = (cos x)^3, find dy/dx.","options":["-3 cos^2 x sin x","3 cos^2 x sin x","-3 cos^2 x","3 cos^3 x"],"answer":"-3 cos^2 x sin x"},{"id":"U3-035","question":"If y = ln((x+1)/(x-1)), find dy/dx.","options":["-2/(x^2-1)","2/(x^2-1)","1/(x^2-1)","-1/(x^2-1)"],"answer":"-2/(x^2-1)"},{"id":"U3-036","question":"What is d/dx (arcsec x)?","options":["1/(|x|sqrt(x^2-1))","1/sqrt(x^2-1)","1/(x sqrt(1-x^2))","1/(x^2+1)"],"answer":"1/(|x|sqrt(x^2-1))"},{"id":"U3-037","question":"If y = x^2 e^(3x), find dy/dx.","options":["e^(3x)(2x + 3x^2)","e^(3x)(2x + x^2)","3x^2 e^(3x)","2x e^(3x)"],"answer":"e^(3x)(2x + 3x^2)"},{"id":"U3-038","question":"If y = sqrt(x^2 + 2x + 5), find dy/dx.","options":["(x+1)/sqrt(x^2+2x+5)","(2x+2)/sqrt(x^2+2x+5)","1/sqrt(x^2+2x+5)","(x+1)/(2sqrt(x^2+2x+5))"],"answer":"(x+1)/sqrt(x^2+2x+5)"},{"id":"U3-039","question":"If y = sin(sin x), find dy/dx.","options":["cos(sin x) cos x","-cos(sin x) cos x","cos x sin(sin x)","cos(cos x) cos x"],"answer":"cos(sin x) cos x"},{"id":"U3-040","question":"What is d/dx (ln(ln x))?","options":["1/(x ln x)","1/ln x","1/x","ln x/x"],"answer":"1/(x ln x)"},{"id":"U3-041","question":"If y = (1+x)^(1/x), find dy/dx.","options":["(1+x)^(1/x) [(1/x^2)(x/(1+x) - ln(1+x))]","(1+x)^(1/x) [ln(1+x)/(1+x)]","(1+x)^(1/x) [1/(1+x)]","(1+x)^(1/x) [ln(1+x)]"],"answer":"(1+x)^(1/x) [(1/x^2)(x/(1+x) - ln(1+x))]"},{"id":"U3-042","question":"If y = arctan(x/2), find dy/dx.","options":["2/(4+x^2)","1/(4+x^2)","2/(1+4x^2)","1/(1+x^2/4)"],"answer":"2/(4+x^2)"},{"id":"U3-043","question":"If y = e^(2x) sin(3x), find dy/dx.","options":["e^(2x)(2 sin 3x + 3 cos 3x)","e^(2x)(2 sin 3x - 3 cos 3x)","3e^(2x) cos 3x","2e^(2x) sin 3x"],"answer":"e^(2x)(2 sin 3x + 3 cos 3x)"},{"id":"U3-044","question":"If x = t^2, y = t^3, find dy/dx.","options":["3t/2","3t^2/2t","2t/3","3t^2"],"answer":"3t/2"},{"id":"U3-045","question":"If x = cos t, y = sin t, find dy/dx.","options":["-cot t","tan t","-tan t","cot t"],"answer":"-cot t"},{"id":"U3-046","question":"If y = tan^3(2x), find dy/dx.","options":["6 tan^2(2x) sec^2(2x)","3 tan^2(2x) sec^2(2x)","6 tan^2(2x)","3 tan^2(2x)"],"answer":"6 tan^2(2x) sec^2(2x)"},{"id":"U3-047","question":"If y = ln(sqrt(x^2+1)), find dy/dx.","options":["x/(x^2+1)","1/(x^2+1)","2x/(x^2+1)","1/(2(x^2+1))"],"answer":"x/(x^2+1)"},{"id":"U3-048","question":"If y = x^(ln x), find dy/dx.","options":["x^(ln x)(2 ln x)/x","x^(ln x)(ln x)/x","x^(ln x)/x","x^(ln x) ln x"],"answer":"x^(ln x)(2 ln x)/x"},{"id":"U3-049","question":"If y = arccsc x, find dy/dx.","options":["-1/(|x|sqrt(x^2-1))","1/(|x|sqrt(x^2-1))","-1/sqrt(x^2-1)","1/(x^2+1)"],"answer":"-1/(|x|sqrt(x^2-1))"},{"id":"U3-050","question":"What is d/dx (sinh x)?","options":["cosh x","sinh x","-cosh x","-sinh x"],"answer":"cosh x"},{"id":"U3-051","question":"What is d/dx (cosh x)?","options":["sinh x","cosh x","-sinh x","-cosh x"],"answer":"sinh x"},{"id":"U3-052","question":"If y = sqrt(1 + sin x), find dy/dx.","options":["cos x/(2sqrt(1+sin x))","cos x/sqrt(1+sin x)","-cos x/(2sqrt(1+sin x))","sin x/(2sqrt(1+sin x))"],"answer":"cos x/(2sqrt(1+sin x))"},{"id":"U3-053","question":"If y = e^(sqrt(x)), find dy/dx.","options":["e^(sqrt(x))/(2sqrt(x))","e^(sqrt(x))/sqrt(x)","2sqrt(x) e^(sqrt(x))","e^(sqrt(x))"],"answer":"e^(sqrt(x))/(2sqrt(x))"},{"id":"U3-054","question":"If y = arctan(ln x), find dy/dx.","options":["1/(x(1+(ln x)^2))","1/(1+(ln x)^2)","1/(x ln x)","ln x/(1+x^2)"],"answer":"1/(x(1+(ln x)^2))"},{"id":"U3-055","question":"If y = (x^2+1)^(1/3), find dy/dx.","options":["(2x/3)(x^2+1)^(-2/3)","(1/3)(x^2+1)^(-2/3)","2x(x^2+1)^(-2/3)","(x/3)(x^2+1)^(-2/3)"],"answer":"(2x/3)(x^2+1)^(-2/3)"},{"id":"U3-056","question":"If x = t - sin t, y = 1 - cos t, find dy/dx.","options":["sin t/(1 - cos t)","(1 - cos t)/sin t","cos t/(1 - sin t)","(1 - sin t)/cos t"],"answer":"sin t/(1 - cos t)"},{"id":"U3-057","question":"If y = (ln x)^2, find dy/dx.","options":["2 ln x / x","2 ln x","1/x","ln x / x"],"answer":"2 ln x / x"},{"id":"U3-058","question":"If y = arcsin(sqrt(x)), find dy/dx.","options":["1/(2sqrt(x)sqrt(1-x))","1/sqrt(1-x)","1/(2sqrt(x))","1/sqrt(x(1-x))"],"answer":"1/(2sqrt(x)sqrt(1-x))"},{"id":"U3-059","question":"If y = x arctan x, find dy/dx.","options":["arctan x + x/(1+x^2)","arctan x","x/(1+x^2)","1/(1+x^2)"],"answer":"arctan x + x/(1+x^2)"},{"id":"U3-060","question":"If y = cot^2 x, find dy/dx.","options":["-2 cot x csc^2 x","2 cot x csc^2 x","-2 csc^2 x","2 cot x"],"answer":"-2 cot x csc^2 x"},{"id":"U3-061","question":"If y = e^(1/x), find dy/dx.","options":["-e^(1/x)/x^2","e^(1/x)/x^2","-e^(1/x)/x","e^(1/x)"],"answer":"-e^(1/x)/x^2"},{"id":"U3-062","question":"If x^2 y + y^2 = 4, what is dy/dx?","options":["-2xy/(x^2 + 2y)","2xy/(x^2 + 2y)","-2xy/(x^2 - 2y)","2xy/(x^2 - 2y)"],"answer":"-2xy/(x^2 + 2y)"},{"id":"U3-063","question":"If y = sec(ln x), find dy/dx.","options":["sec(ln x) tan(ln x)/x","sec(ln x)/x","sec(ln x) tan(ln x)","tan(ln x)/x"],"answer":"sec(ln x) tan(ln x)/x"},{"id":"U3-064","question":"What is d/dx (arctan(sin x))?","options":["cos x/(1 + sin^2 x)","cos x/(1 + cos^2 x)","-cos x/(1 + sin^2 x)","sin x/(1 + sin^2 x)"],"answer":"cos x/(1 + sin^2 x)"},{"id":"U3-065","question":"If y = (x + sqrt(x^2+1))^2, find dy/dx.","options":["2(x + sqrt(x^2+1))^2/sqrt(x^2+1)","2(x + sqrt(x^2+1))/sqrt(x^2+1)","(x + sqrt(x^2+1))^2/sqrt(x^2+1)","2(x + sqrt(x^2+1))"],"answer":"2(x + sqrt(x^2+1))^2/sqrt(x^2+1)"},{"id":"U3-066","question":"If y = ln(csc x), find dy/dx.","options":["-cot x","cot x","csc x cot x","-csc x cot x"],"answer":"-cot x"},{"id":"U3-067","question":"If y = tan(sin x), find dy/dx.","options":["sec^2(sin x) cos x","sec^2(sin x)","cos x tan(sin x)","sec^2(cos x) sin x"],"answer":"sec^2(sin x) cos x"},{"id":"U3-068","question":"If y = (1+x^2)^(arctan x), find dy/dx.","options":["(1+x^2)^(arctan x)(ln(1+x^2)/(1+x^2) + 2x arctan x/(1+x^2))","(1+x^2)^(arctan x)(ln(1+x^2) + 2x arctan x)","(1+x^2)^(arctan x)(1/(1+x^2))","(1+x^2)^(arctan x)(2x/(1+x^2))"],"answer":"(1+x^2)^(arctan x)(ln(1+x^2)/(1+x^2) + 2x arctan x/(1+x^2))"},{"id":"U3-069","question":"What is d/dx (tanh x)?","options":["sech^2 x","csch^2 x","tanh^2 x","1 - tanh x"],"answer":"sech^2 x"},{"id":"U3-070","question":"If y = arcsin(x^2), find dy/dx.","options":["2x/sqrt(1-x^4)","1/sqrt(1-x^4)","2x/sqrt(1-x^2)","1/sqrt(1-x^2)"],"answer":"2x/sqrt(1-x^4)"}]},{"unit":4,"title":"Contextual Applications of Differentiation","problems":[{"id":"U4-001","question":"A particle moves with position s(t) = t^3 - 3t^2 + 2t. What is its velocity at t = 2?","options":["2","0","4","6"],"answer":"2"},{"id":"U4-002","question":"The velocity of a particle is v(t) = 3t^2 - 6t. What is the acceleration at t = 2?","options":["6","0","12","3"],"answer":"6"},{"id":"U4-003","question":"A particle's position is s(t) = t^2 - 4t. When is it at rest?","options":["t = 2","t = 0","t = 4","t = -2"],"answer":"t = 2"},{"id":"U4-004","question":"If f'(c) = 0 and f'(x) changes from positive to negative at x = c, then f has a:","options":["Local maximum at c","Local minimum at c","Point of inflection at c","Removable discontinuity at c"],"answer":"Local maximum at c"},{"id":"U4-005","question":"If f'(c) = 0 and f'(x) changes from negative to positive at x = c, then f has a:","options":["Local minimum at c","Local maximum at c","Point of inflection at c","Vertical asymptote at c"],"answer":"Local minimum at c"},{"id":"U4-006","question":"The Mean Value Theorem states that if f is continuous on [a,b] and differentiable on (a,b), there exists c in (a,b) such that:","options":["f'(c) = (f(b)-f(a))/(b-a)","f'(c) = 0","f(c) = 0","f'(c) = (f(a)+f(b))/2"],"answer":"f'(c) = (f(b)-f(a))/(b-a)"},{"id":"U4-007","question":"Rolle's Theorem requires f(a) = f(b) in addition to conditions of the Mean Value Theorem. What conclusion follows?","options":["There exists c with f'(c) = 0","There exists c with f'(c) = (f(b)-f(a))/(b-a)","f is constant","f has no critical points"],"answer":"There exists c with f'(c) = 0"},{"id":"U4-008","question":"A particle moves along a line with velocity v(t) = t^2 - 4. On what interval is the particle moving to the right?","options":["(2, ∞)","(0, 2)","(-2, 2)","(-∞, -2)"],"answer":"(2, ∞)"},{"id":"U4-009","question":"If the position of a particle is s(t) = 2t^3 - 9t^2 + 12t, at what time is the acceleration zero?","options":["t = 3/2","t = 1","t = 2","t = 0"],"answer":"t = 3/2"},{"id":"U4-010","question":"The derivative of position with respect to time gives:","options":["Velocity","Acceleration","Speed","Displacement"],"answer":"Velocity"},{"id":"U4-011","question":"The derivative of velocity with respect to time gives:","options":["Acceleration","Speed","Jerk","Displacement"],"answer":"Acceleration"},{"id":"U4-012","question":"A particle's velocity is v(t) = 6t - t^2. What is the maximum velocity on [0, 6]?","options":["9","6","12","0"],"answer":"9"},{"id":"U4-013","question":"If f(x) = x^3 - 3x, find the x-values of the critical points.","options":["x = -1, 1","x = 0","x = 3","x = -3, 3"],"answer":"x = -1, 1"},{"id":"U4-014","question":"Find the absolute maximum of f(x) = x^2 - 4x + 5 on [0, 3].","options":["5","1","2","0"],"answer":"5"},{"id":"U4-015","question":"Find the absolute minimum of f(x) = x^2 - 4x + 5 on [0, 3].","options":["1","5","0","2"],"answer":"1"},{"id":"U4-016","question":"If f''(x) > 0 on an interval, then f is:","options":["Concave up","Concave down","Increasing","Decreasing"],"answer":"Concave up"},{"id":"U4-017","question":"If f''(x) < 0 on an interval, then f is:","options":["Concave down","Concave up","Increasing","Decreasing"],"answer":"Concave down"},{"id":"U4-018","question":"A point of inflection occurs where:","options":["f''(x) changes sign","f'(x) = 0","f''(x) = 0 only","f(x) = 0"],"answer":"f''(x) changes sign"},{"id":"U4-019","question":"A ladder 10 ft long leans against a wall. If the bottom slides away at 2 ft/s, how fast is the top sliding down when the bottom is 6 ft from the wall?","options":["1.5 ft/s","2 ft/s","3 ft/s","1 ft/s"],"answer":"1.5 ft/s"},{"id":"U4-020","question":"The radius of a circle increases at 3 cm/s. How fast is the area increasing when r = 5 cm?","options":["30π cm²/s","15π cm²/s","25π cm²/s","10π cm²/s"],"answer":"30π cm²/s"},{"id":"U4-021","question":"A balloon is inflated at 100 cm³/s. How fast is the radius increasing when r = 5 cm? (V = 4/3 πr³)","options":["1/π cm/s","2/π cm/s","1/(2π) cm/s","5/π cm/s"],"answer":"1/π cm/s"},{"id":"U4-022","question":"A cube's side length increases at 2 cm/s. How fast is the volume increasing when s = 4 cm?","options":["96 cm³/s","48 cm³/s","64 cm³/s","24 cm³/s"],"answer":"96 cm³/s"},{"id":"U4-023","question":"If y = 3x + 5 and dx/dt = 2, what is dy/dt?","options":["6","2","3","5"],"answer":"6"},{"id":"U4-024","question":"If xy = 12 and dx/dt = 3, what is dy/dt when x = 4?","options":["-3/4","3/4","-4/3","4/3"],"answer":"-3/4"},{"id":"U4-025","question":"Use linear approximation to estimate sqrt(4.1). (Let f(x) = sqrt(x), a = 4)","options":["2.025","2.05","2.1","2.01"],"answer":"2.025"},{"id":"U4-026","question":"The linear approximation of f(x) = x^3 at x = 1 is:","options":["3x - 2","3x + 2","x + 2","3x"],"answer":"3x - 2"},{"id":"U4-027","question":"If f(x) = x^2, use linear approximation at x = 3 to estimate f(3.02).","options":["9.12","9.02","9.04","9.06"],"answer":"9.12"},{"id":"U4-028","question":"L'Hôpital's Rule can be applied to which form?","options":["0/0","1/0","∞/1","0/∞"],"answer":"0/0"},{"id":"U4-029","question":"Evaluate lim(x→0) (sin x)/x using L'Hôpital's Rule.","options":["1","0","∞","-1"],"answer":"1"},{"id":"U4-030","question":"Evaluate lim(x→∞) x/e^x using L'Hôpital's Rule.","options":["0","1","∞","e"],"answer":"0"},{"id":"U4-031","question":"Evaluate lim(x→0) (e^x - 1)/x.","options":["1","0","e","∞"],"answer":"1"},{"id":"U4-032","question":"Evaluate lim(x→∞) (ln x)/x.","options":["0","1","∞","-∞"],"answer":"0"},{"id":"U4-033","question":"A rectangle has perimeter 20. What dimensions maximize area?","options":["5 × 5","4 × 6","3 × 7","2 × 8"],"answer":"5 × 5"},{"id":"U4-034","question":"A farmer has 100 ft of fencing to enclose a rectangular area. What is the maximum area?","options":["625 ft²","500 ft²","600 ft²","400 ft²"],"answer":"625 ft²"},{"id":"U4-035","question":"A box with square base and no top has volume 32 ft³. What base side minimizes surface area?","options":["4 ft","2 ft","8 ft","2√2 ft"],"answer":"4 ft"},{"id":"U4-036","question":"The cost of manufacturing x items is C(x) = x^2 + 4x + 100. What is the marginal cost at x = 10?","options":["24","14","20","100"],"answer":"24"},{"id":"U4-037","question":"If R(x) = 100x - x^2 and C(x) = 20x + 200, what is the profit-maximizing quantity?","options":["40","50","30","60"],"answer":"40"},{"id":"U4-038","question":"If f(x) = x^3, the linear approximation at x = 2 is:","options":["12x - 16","12x + 16","8x - 12","3x^2 - 4"],"answer":"12x - 16"},{"id":"U4-039","question":"A particle's acceleration is a(t) = 6t. If v(0) = 2, what is v(1)?","options":["5","3","8","6"],"answer":"5"},{"id":"U4-040","question":"A particle moves with velocity v(t) = t^2 - 1. On what interval is it moving left?","options":["(-1, 1)","(1, ∞)","(-∞, -1)","(0, ∞)"],"answer":"(-1, 1)"},{"id":"U4-041","question":"A particle's position is s(t) = 3t^2 - 2t + 1. What is its speed at t = 1?","options":["4","6","2","3"],"answer":"4"},{"id":"U4-042","question":"If f(x) = x^4 - 2x^2, find all points of inflection.","options":["x = ±1/√3","x = 0","x = ±1","No inflection points"],"answer":"x = ±1/√3"},{"id":"U4-043","question":"If f'(x) > 0 and f''(x) < 0 on an interval, f is:","options":["Increasing and concave down","Increasing and concave up","Decreasing and concave down","Decreasing and concave up"],"answer":"Increasing and concave down"},{"id":"U4-044","question":"A spherical balloon's volume is increasing at 20 cm³/s. How fast is the radius increasing when r = 2 cm?","options":["5/(4π) cm/s","5/π cm/s","10/π cm/s","5/(2π) cm/s"],"answer":"5/(4π) cm/s"},{"id":"U4-045","question":"The side of a square increases at 3 in/s. How fast is area increasing when side = 10 in?","options":["60 in²/s","30 in²/s","100 in²/s","9 in²/s"],"answer":"60 in²/s"},{"id":"U4-046","question":"Use L'Hôpital's Rule: lim(x→0) (1 - cos x)/x^2.","options":["1/2","1","0","∞"],"answer":"1/2"},{"id":"U4-047","question":"Evaluate lim(x→0) tan(x)/x.","options":["1","0","∞","-1"],"answer":"1"},{"id":"U4-048","question":"What is the maximum of f(x) = 2x^3 - 3x^2 on [-1, 2]?","options":["4","0","5","1"],"answer":"4"},{"id":"U4-049","question":"If a car's position is s(t) = 3t^2 + 2t, what is its speed at t = 2?","options":["14","12","16","8"],"answer":"14"},{"id":"U4-050","question":"A particle's velocity is v(t) = cos t on [0, π/2]. When is the particle at rest?","options":["t = π/2","t = 0","t = π/4","Never"],"answer":"t = π/2"},{"id":"U4-051","question":"If y = x^2 and dx/dt = 3, what is dy/dt when x = 2?","options":["12","6","9","3"],"answer":"12"},{"id":"U4-052","question":"The edge of a cube is 10 cm with possible error 0.1 cm. Use differentials to estimate the error in volume.","options":["30 cm³","10 cm³","20 cm³","3 cm³"],"answer":"30 cm³"},{"id":"U4-053","question":"Use differentials to estimate sqrt(16.1).","options":["4.0125","4.05","4.1","4.025"],"answer":"4.0125"},{"id":"U4-054","question":"Evaluate lim(x→∞) (e^x)/(x^2) using L'Hôpital's Rule.","options":["∞","0","1","2"],"answer":"∞"},{"id":"U4-055","question":"A particle has velocity v(t) = 6t - 3t^2. When is acceleration zero?","options":["t = 1","t = 2","t = 0","t = 3"],"answer":"t = 1"},{"id":"U4-056","question":"The position of a particle is s(t) = t^4 - 4t^3. How many critical points does it have?","options":["2","1","3","0"],"answer":"2"},{"id":"U4-057","question":"If f(x) = x/(x^2 + 1), find the absolute maximum on [0, 2].","options":["1/2","1/5","2/5","1"],"answer":"1/2"},{"id":"U4-058","question":"If f(x) = 2x^2 - 8x + 1, find the minimum value.","options":["-7","1","-8","0"],"answer":"-7"},{"id":"U4-059","question":"The volume of a cone is V = (1/3)πr²h. If r increases at 2 cm/s and h = 3r, how fast is V increasing when r = 1?","options":["6π cm³/s","4π cm³/s","2π cm³/s","8π cm³/s"],"answer":"6π cm³/s"},{"id":"U4-060","question":"For what value of x does f(x) = x^3 - 3x^2 + 4 have a local minimum?","options":["x = 2","x = 0","x = 1","x = 3"],"answer":"x = 2"},{"id":"U4-061","question":"A particle's velocity is v(t) = 2t - 6. What is the displacement from t = 0 to t = 4?","options":["-4","4","2","0"],"answer":"-4"},{"id":"U4-062","question":"A cylindrical tank's radius is 3 m and water height increases at 2 m/min. How fast is volume increasing? (V = πr²h)","options":["18π m³/min","6π m³/min","9π m³/min","12π m³/min"],"answer":"18π m³/min"},{"id":"U4-063","question":"Evaluate lim(x→0) (sin 3x)/(5x) using L'Hôpital's Rule.","options":["3/5","1","5/3","0"],"answer":"3/5"},{"id":"U4-064","question":"If f(x) = x^5 - 5x^4, find the x-values of inflection points.","options":["x = 0, 3","x = 0","x = 3","x = 5"],"answer":"x = 0, 3"},{"id":"U4-065","question":"Use the linear approximation of f(x) = ln x at x = 1 to estimate ln(1.1).","options":["0.1","0.095","0.105","0.11"],"answer":"0.1"},{"id":"U4-066","question":"The revenue function is R(x) = 50x - 0.5x^2. What x maximizes revenue?","options":["50","25","100","75"],"answer":"50"},{"id":"U4-067","question":"If s(t) = 5t^2 - 2t, what is the average velocity on [0, 2]?","options":["8","10","4","6"],"answer":"8"},{"id":"U4-068","question":"On what interval is f(x) = x^3 - 3x decreasing?","options":["(-1, 1)","(-∞, -1)","(1, ∞)","(0, 2)"],"answer":"(-1, 1)"},{"id":"U4-069","question":"If two numbers sum to 20, what is the maximum product?","options":["100","50","200","80"],"answer":"100"},{"id":"U4-070","question":"A particle's position is s(t) = t^3 - 6t^2 + 9t. What is its velocity at t = 2?","options":["-3","3","0","-1"],"answer":"-3"}]},{"unit":5,"title":"Analytical Applications of Differentiation","problems":[{"id":"U5-001","question":"If f'(x) > 0 for all x, then f is:","options":["Increasing everywhere","Decreasing everywhere","Constant everywhere","Concave up everywhere"],"answer":"Increasing everywhere"},{"id":"U5-002","question":"If f''(x) > 0 for all x, then f is:","options":["Concave up everywhere","Concave down everywhere","Increasing everywhere","Decreasing everywhere"],"answer":"Concave up everywhere"},{"id":"U5-003","question":"A local maximum occurs when f'(x):","options":["Changes from positive to negative","Changes from negative to positive","Is zero only","Is negative"],"answer":"Changes from positive to negative"},{"id":"U5-004","question":"A local minimum occurs when f'(x):","options":["Changes from negative to positive","Changes from positive to negative","Is positive only","Is zero only"],"answer":"Changes from negative to positive"},{"id":"U5-005","question":"If f(x) = x^3 - 3x^2 + 4, find the local maxima.","options":["(0, 4)","(2, 0)","(1, 2)","(3, 4)"],"answer":"(0, 4)"},{"id":"U5-006","question":"Find the absolute maximum of f(x) = x^3 - 3x on [-2, 2].","options":["2","-2","0","1"],"answer":"2"},{"id":"U5-007","question":"Find the absolute minimum of f(x) = x^4 - 4x^2 on [-2, 2].","options":["-4","0","-2","2"],"answer":"-4"},{"id":"U5-008","question":"If f(x) = 2x^3 - 3x^2 - 12x, find the critical points.","options":["x = -1, 2","x = 1, -2","x = 0, 3","x = -2, 3"],"answer":"x = -1, 2"},{"id":"U5-009","question":"The inflection point of f(x) = x^3 is at:","options":["x = 0","x = 1","x = -1","No inflection point"],"answer":"x = 0"},{"id":"U5-010","question":"If f(x) = x^2 + 2x + 1, the vertex is at:","options":["x = -1","x = 1","x = 0","x = -2"],"answer":"x = -1"},{"id":"U5-011","question":"If f'(x) has a local maximum at x = c, then f has:","options":["A point of inflection at c","A local minimum at c","A local maximum at c","No feature at c"],"answer":"A point of inflection at c"},{"id":"U5-012","question":"For f(x) = x^3 - 6x^2 + 9x + 1, find the local maximum value.","options":["5","1","3","9"],"answer":"5"},{"id":"U5-013","question":"If f(x) = e^x - x, the minimum value is:","options":["1","0","e","-1"],"answer":"1"},{"id":"U5-014","question":"The function f(x) = x + 1/x on (0, ∞) has a local minimum at:","options":["x = 1","x = 2","x = 0.5","x = e"],"answer":"x = 1"},{"id":"U5-015","question":"For f(x) = sin x on [0, 2π], the local maxima occur at:","options":["x = π/2","x = 3π/2","x = 0","x = π"],"answer":"x = π/2"},{"id":"U5-016","question":"The function f(x) = x^4 - 2x^2 has how many local extrema?","options":["3","2","1","0"],"answer":"3"},{"id":"U5-017","question":"If f is differentiable and f'(x) = (x-1)^2(x+2), at what x does f have a local minimum?","options":["x = -2","x = 1","x = 2","x = -1"],"answer":"x = -2"},{"id":"U5-018","question":"f(x) = x^3 - 3x^2 + 3x - 1 is:","options":["Increasing everywhere","Decreasing everywhere","Concave down everywhere","Has two extrema"],"answer":"Increasing everywhere"},{"id":"U5-019","question":"The point of inflection of f(x) = x^4 - 6x^2 is at:","options":["x = ±1","x = 0","x = ±√3","x = ±2"],"answer":"x = ±1"},{"id":"U5-020","question":"If f'(x) = 3x^2 - 12, where is f increasing?","options":["(-∞, -2) ∪ (2, ∞)","(-2, 2)","(0, ∞)","(-∞, 0)"],"answer":"(-∞, -2) ∪ (2, ∞)"},{"id":"U5-021","question":"If f(x) = x^2, then the linear approximation at x = 1 is:","options":["2x - 1","2x + 1","x - 1","2x"],"answer":"2x - 1"},{"id":"U5-022","question":"If f'(x) = 0 and f''(x) > 0 at x = c, then f has a:","options":["Local minimum at c","Local maximum at c","Point of inflection at c","Discontinuity at c"],"answer":"Local minimum at c"},{"id":"U5-023","question":"If f'(x) = 0 and f''(x) < 0 at x = c, then f has a:","options":["Local maximum at c","Local minimum at c","Point of inflection at c","Vertical tangent at c"],"answer":"Local maximum at c"},{"id":"U5-024","question":"The function f(x) = 1/x has:","options":["No local extrema","Local minimum at x = 1","Local maximum at x = -1","Local minimum at x = -1"],"answer":"No local extrema"},{"id":"U5-025","question":"If f(x) = ln x, on what interval is it concave down?","options":["(0, ∞)","(-∞, 0)","(1, ∞)","Never"],"answer":"(0, ∞)"},{"id":"U5-026","question":"If f(x) = x e^(-x), where is the local maximum?","options":["x = 1","x = 0","x = -1","x = e"],"answer":"x = 1"},{"id":"U5-027","question":"The total profit function is P(x) = -x^2 + 10x - 20. What x maximizes profit?","options":["5","10","4","6"],"answer":"5"},{"id":"U5-028","question":"The velocity v(t) = 2t - 6 on [0, 5]. On what interval is speed decreasing?","options":["(3, 5)","(0, 3)","(0, 5)","(2, 5)"],"answer":"(3, 5)"},{"id":"U5-029","question":"f(x) = x^3 - 3x^2 + 2. Find the y-value of the local maximum.","options":["2","0","4","-2"],"answer":"2"},{"id":"U5-030","question":"f(x) = 2x^3 - 3x^2 - 36x + 5. At what x is there a local maximum?","options":["x = -2","x = 3","x = 2","x = -3"],"answer":"x = -2"},{"id":"U5-031","question":"The function f(x) = cos x on [0, 2π] has a local minimum at:","options":["x = π","x = 0","x = π/2","x = 3π/2"],"answer":"x = π"},{"id":"U5-032","question":"The derivative f'(x) = x^3 - 3x. At what x does f have a local maximum?","options":["x = -√3","x = √3","x = 0","x = 1"],"answer":"x = -√3"},{"id":"U5-033","question":"If f(x) = x^2 e^x, the local minimum is at:","options":["x = -2","x = 0","x = -1","x = 1"],"answer":"x = -2"},{"id":"U5-034","question":"The point of inflection of f(x) = x^3 - 3x^2 is at:","options":["x = 1","x = 0","x = 2","x = -1"],"answer":"x = 1"},{"id":"U5-035","question":"If f(x) = 3x^4 - 4x^3, find the local minimum.","options":["(1, -1)","(0, 0)","(2, 16)","(-1, 7)"],"answer":"(1, -1)"},{"id":"U5-036","question":"If a particle's velocity is v(t) = t^3 - 3t, on what intervals is it speeding up?","options":["(-√3, 0) ∪ (√3, ∞)","(0, √3)","(-∞, -1) ∪ (1, ∞)","(-1, 1)"],"answer":"(-√3, 0) ∪ (√3, ∞)"},{"id":"U5-037","question":"The function f(x) = x^5 - 5x has a local maximum at:","options":["x = -1","x = 1","x = 0","x = √5"],"answer":"x = -1"},{"id":"U5-038","question":"If f(x) = x^2 - 2ln x, the minimum value is:","options":["1","0","2","e"],"answer":"1"},{"id":"U5-039","question":"If f(x) = 1/(x^2 + 1), the absolute maximum is at:","options":["x = 0","x = 1","x = -1","x = ±1"],"answer":"x = 0"},{"id":"U5-040","question":"The graph of f(x) = x^3 is concave down on:","options":["(-∞, 0)","(0, ∞)","(-∞, ∞)","Never"],"answer":"(-∞, 0)"},{"id":"U5-041","question":"f(x) = x/(x^2 + 1) has a local maximum at:","options":["x = 1","x = -1","x = 0","x = ±1"],"answer":"x = 1"},{"id":"U5-042","question":"The function f(x) = 2x + 1/x has a local minimum at:","options":["x = 1/√2","x = 1","x = √2","x = 2"],"answer":"x = 1/√2"},{"id":"U5-043","question":"If f'(x) = 4x^3 - 12x^2, the inflection point of f is at:","options":["x = 0, 2","x = 2","x = 0","x = 1"],"answer":"x = 0, 2"},{"id":"U5-044","question":"If f is concave up and f'(1) = 0, then at x = 1, f has a:","options":["Local minimum","Local maximum","Inflection point","Zero"],"answer":"Local minimum"},{"id":"U5-045","question":"f(x) = x^3 - 3x^2 + 4 has inflection point at:","options":["x = 1","x = 0","x = 2","x = -1"],"answer":"x = 1"},{"id":"U5-046","question":"If f'(x) = x^2 - 1, on what interval is f increasing?","options":["(-∞, -1) ∪ (1, ∞)","(-1, 1)","(0, ∞)","(-∞, 0)"],"answer":"(-∞, -1) ∪ (1, ∞)"},{"id":"U5-047","question":"The maximum area of a rectangle inscribed in a semicircle of radius 2 is:","options":["4","2","8","π"],"answer":"4"},{"id":"U5-048","question":"The function f(x) = ln x/x has a local maximum at:","options":["x = e","x = 1","x = 0","x = 2"],"answer":"x = e"},{"id":"U5-049","question":"At a point of inflection, f''(x) is:","options":["Zero or undefined, and changes sign","Always zero only","Always positive","Always negative"],"answer":"Zero or undefined, and changes sign"},{"id":"U5-050","question":"f(x) = x^2/2 - 2x + 3 has minimum at:","options":["x = 2","x = -2","x = 0","x = 1"],"answer":"x = 2"},{"id":"U5-051","question":"The number of inflection points of f(x) = x^4 - 2x^2 is:","options":["2","1","3","0"],"answer":"2"},{"id":"U5-052","question":"If f(x) = 3x^2 - 12x + 7, the minimum value is:","options":["-5","7","0","-7"],"answer":"-5"},{"id":"U5-053","question":"The local maximum of f(x) = x e^(-x) occurs at:","options":["x = 1","x = e","x = 0","x = -1"],"answer":"x = 1"},{"id":"U5-054","question":"f(x) = x - sin x is:","options":["Increasing everywhere","Decreasing everywhere","Concave down everywhere","Constant"],"answer":"Increasing everywhere"},{"id":"U5-055","question":"The function f(x) = x^3 - 3x^2 - 9x has a local maximum at:","options":["x = -1","x = 3","x = 1","x = -3"],"answer":"x = -1"},{"id":"U5-056","question":"f(x) = x^4 - 4x^3 has an inflection point at:","options":["x = 0, 2","x = 2","x = 0","x = 3"],"answer":"x = 0, 2"},{"id":"U5-057","question":"If the derivative changes from negative to positive at x = 2, then f(2) is a:","options":["Local minimum","Local maximum","Inflection point","Undefined"],"answer":"Local minimum"},{"id":"U5-058","question":"The absolute maximum of f(x) = 2x^3 - 3x^2 on [0, 2] is:","options":["4","0","2","1"],"answer":"4"},{"id":"U5-059","question":"The absolute minimum of f(x) = x^2 - 4x on [0, 4] is:","options":["-4","0","-2","4"],"answer":"-4"},{"id":"U5-060","question":"If f(x) = 2x + 8/x, the local minimum is at:","options":["x = 2","x = -2","x = 4","x = 1"],"answer":"x = 2"},{"id":"U5-061","question":"f(x) = x^2 + 4x + 5 has vertex at:","options":["(-2, 1)","(2, 13)","(0, 5)","(-4, 5)"],"answer":"(-2, 1)"},{"id":"U5-062","question":"The graph of f(x) = 1/(x^2 + 1) is:","options":["Concave up for |x| > 1/√3","Concave down for |x| < 1/√3","Concave up for |x| < 1/√3","Concave up everywhere"],"answer":"Concave up for |x| > 1/√3"},{"id":"U5-063","question":"The number of extrema of f(x) = x^2 e^x is:","options":["2","1","0","3"],"answer":"2"},{"id":"U5-064","question":"If f(x) = arctan x, the point of inflection is at:","options":["x = 0","x = 1","x = -1","No inflection point"],"answer":"x = 0"},{"id":"U5-065","question":"The minimum value of f(x) = x^2 + 1/x^2 is:","options":["2","0","1","4"],"answer":"2"},{"id":"U5-066","question":"The function f(x) = sqrt(x) is concave:","options":["Down on (0, ∞)","Up on (0, ∞)","Up on (-∞, ∞)","Down on (-∞, 0)"],"answer":"Down on (0, ∞)"},{"id":"U5-067","question":"The local maximum of f(x) = ln x - x is at:","options":["x = 1","x = e","x = 0","x = -1"],"answer":"x = 1"},{"id":"U5-068","question":"The function f(x) = e^(-x^2) has a local maximum at:","options":["x = 0","x = 1","x = -1","x = ±1"],"answer":"x = 0"},{"id":"U5-069","question":"The number of critical points of f(x) = x - sin x on [0, 2π] is:","options":["1","0","2","3"],"answer":"1"},{"id":"U5-070","question":"The minimum value of f(x) = x^3 - 3x^2 + 5 on [0, 3] is:","options":["1","5","3","-1"],"answer":"1"}]},{"unit":6,"title":"Integration and Accumulation of Change","problems":[{"id":"U6-001","question":"Evaluate ∫x^2 dx.","options":["x^3/3 + C","2x + C","x^3 + C","x^2/2 + C"],"answer":"x^3/3 + C"},{"id":"U6-002","question":"Evaluate ∫cos x dx.","options":["sin x + C","-sin x + C","cos x + C","-cos x + C"],"answer":"sin x + C"},{"id":"U6-003","question":"Evaluate ∫e^x dx.","options":["e^x + C","xe^x + C","e^x/x + C","ln x + C"],"answer":"e^x + C"},{"id":"U6-004","question":"Evaluate ∫(1/x) dx.","options":["ln|x| + C","1/x^2 + C","-1/x^2 + C","x + C"],"answer":"ln|x| + C"},{"id":"U6-005","question":"Evaluate ∫sin x dx.","options":["-cos x + C","cos x + C","sin x + C","-sin x + C"],"answer":"-cos x + C"},{"id":"U6-006","question":"Evaluate ∫(3x^2 + 2x) dx.","options":["x^3 + x^2 + C","3x^3 + 2x^2 + C","x^3 + 2x^2 + C","3x^2 + 2 + C"],"answer":"x^3 + x^2 + C"},{"id":"U6-007","question":"Evaluate ∫sec^2 x dx.","options":["tan x + C","sec x + C","sec x tan x + C","-tan x + C"],"answer":"tan x + C"},{"id":"U6-008","question":"Evaluate ∫(1/(1+x^2)) dx.","options":["arctan x + C","arcsin x + C","ln(1+x^2) + C","1/(1+x^2) + C"],"answer":"arctan x + C"},{"id":"U6-009","question":"Evaluate ∫(1/sqrt(1-x^2)) dx.","options":["arcsin x + C","arccos x + C","arctan x + C","ln|x| + C"],"answer":"arcsin x + C"},{"id":"U6-010","question":"Evaluate ∫e^(3x) dx.","options":["e^(3x)/3 + C","3e^(3x) + C","e^(3x) + C","e^(3x)/x + C"],"answer":"e^(3x)/3 + C"},{"id":"U6-011","question":"Evaluate ∫(2x+1)^3 dx.","options":["(2x+1)^4/8 + C","(2x+1)^4/4 + C","(2x+1)^4/2 + C","(2x+1)^4 + C"],"answer":"(2x+1)^4/8 + C"},{"id":"U6-012","question":"Evaluate ∫x cos(x^2) dx.","options":["(1/2)sin(x^2) + C","sin(x^2) + C","-sin(x^2) + C","-2sin(x^2) + C"],"answer":"(1/2)sin(x^2) + C"},{"id":"U6-013","question":"Evaluate ∫xe^(x^2) dx.","options":["(1/2)e^(x^2) + C","e^(x^2) + C","2e^(x^2) + C","x^2 e^(x^2) + C"],"answer":"(1/2)e^(x^2) + C"},{"id":"U6-014","question":"Evaluate ∫(ln x)/x dx.","options":["(ln x)^2/2 + C","ln(ln x) + C","1/x + C","(ln x)^2 + C"],"answer":"(ln x)^2/2 + C"},{"id":"U6-015","question":"Using u-substitution with u = x^2 + 1, evaluate ∫2x/(x^2+1) dx.","options":["ln(x^2+1) + C","arctan x + C","2ln(x^2+1) + C","1/(x^2+1) + C"],"answer":"ln(x^2+1) + C"},{"id":"U6-016","question":"Evaluate ∫sin^2 x dx.","options":["x/2 - sin(2x)/4 + C","x/2 + sin(2x)/4 + C","sin^3 x/3 + C","cos^2 x + C"],"answer":"x/2 - sin(2x)/4 + C"},{"id":"U6-017","question":"Evaluate ∫x ln x dx.","options":["(x^2/2)ln x - x^2/4 + C","(x^2/2)ln x + x^2/4 + C","x^2/4 + C","ln x/x + C"],"answer":"(x^2/2)ln x - x^2/4 + C"},{"id":"U6-018","question":"Evaluate ∫x e^x dx.","options":["xe^x - e^x + C","xe^x + e^x + C","x^2 e^x/2 + C","e^x + C"],"answer":"xe^x - e^x + C"},{"id":"U6-019","question":"Evaluate ∫ln x dx.","options":["x ln x - x + C","x ln x + x + C","ln x/x + C","x/ln x + C"],"answer":"x ln x - x + C"},{"id":"U6-020","question":"Evaluate ∫e^(2x) cos x dx.","options":["e^(2x)(2cos x + sin x)/5 + C","e^(2x)(2cos x - sin x)/5 + C","e^(2x)sin x + C","e^(2x)cos x + C"],"answer":"e^(2x)(2cos x + sin x)/5 + C"},{"id":"U6-021","question":"Evaluate ∫(1/(x^2+4)) dx.","options":["(1/2)arctan(x/2) + C","arctan(x/2) + C","ln(x^2+4) + C","(1/4)arctan(x/4) + C"],"answer":"(1/2)arctan(x/2) + C"},{"id":"U6-022","question":"Evaluate ∫tan x dx.","options":["ln|sec x| + C","sec^2 x + C","-ln|cos x| + C","Both A and C"],"answer":"Both A and C"},{"id":"U6-023","question":"Evaluate ∫sec x dx.","options":["ln|sec x + tan x| + C","sec x tan x + C","tan x + C","ln|sec x| + C"],"answer":"ln|sec x + tan x| + C"},{"id":"U6-024","question":"Evaluate ∫(1/(x^2-1)) dx (partial fractions).","options":["(1/2)ln|(x-1)/(x+1)| + C","ln|x^2-1| + C","arctan x + C","(1/2)ln|x^2-1| + C"],"answer":"(1/2)ln|(x-1)/(x+1)| + C"},{"id":"U6-025","question":"Evaluate ∫_0^1 x^2 dx.","options":["1/3","1/2","1","0"],"answer":"1/3"},{"id":"U6-026","question":"Evaluate ∫_0^π sin x dx.","options":["2","1","0","-2"],"answer":"2"},{"id":"U6-027","question":"Evaluate ∫_1^e (1/x) dx.","options":["1","e","0","ln e - ln 1"],"answer":"1"},{"id":"U6-028","question":"If F(x) = ∫_0^x t^2 dt, what is F'(x)?","options":["x^2","2x","x^3/3","1"],"answer":"x^2"},{"id":"U6-029","question":"By the Fundamental Theorem of Calculus, d/dx ∫_a^x f(t) dt =","options":["f(x)","f'(x)","F(x)","f(a)"],"answer":"f(x)"},{"id":"U6-030","question":"Evaluate d/dx ∫_0^(x^2) cos t dt.","options":["2x cos(x^2)","cos(x^2)","2x cos t","sin(x^2)"],"answer":"2x cos(x^2)"},{"id":"U6-031","question":"Evaluate ∫_0^2 (3x^2 + 1) dx.","options":["10","8","12","6"],"answer":"10"},{"id":"U6-032","question":"Evaluate ∫_1^4 sqrt(x) dx.","options":["14/3","7/3","4","16/3"],"answer":"14/3"},{"id":"U6-033","question":"Evaluate ∫_0^1 e^x dx.","options":["e - 1","e","1","e + 1"],"answer":"e - 1"},{"id":"U6-034","question":"Evaluate ∫_0^(π/2) cos x dx.","options":["1","0","-1","π/2"],"answer":"1"},{"id":"U6-035","question":"The area under y = x^2 from x = 0 to x = 3 is:","options":["9","27","6","3"],"answer":"9"},{"id":"U6-036","question":"Evaluate ∫(x^3 + 2x) dx.","options":["x^4/4 + x^2 + C","x^4 + x^2 + C","3x^2 + 2 + C","x^3/3 + x^2 + C"],"answer":"x^4/4 + x^2 + C"},{"id":"U6-037","question":"Evaluate ∫(cos x sin x) dx.","options":["sin^2 x/2 + C","cos^2 x/2 + C","-sin^2 x + C","sin(2x)/2 + C"],"answer":"sin^2 x/2 + C"},{"id":"U6-038","question":"Evaluate ∫x/(x^2+1) dx.","options":["(1/2)ln(x^2+1) + C","ln(x^2+1) + C","arctan x + C","2ln(x^2+1) + C"],"answer":"(1/2)ln(x^2+1) + C"},{"id":"U6-039","question":"Evaluate ∫(1/x^2) dx.","options":["-1/x + C","1/x + C","-1/x^2 + C","ln|x| + C"],"answer":"-1/x + C"},{"id":"U6-040","question":"Evaluate ∫(sqrt(x) + 1) dx.","options":["(2/3)x^(3/2) + x + C","x^(3/2)/3 + x + C","(2/3)x^(3/2) + C","x^(1/2)/2 + x + C"],"answer":"(2/3)x^(3/2) + x + C"},{"id":"U6-041","question":"Evaluate ∫e^(-x) dx.","options":["-e^(-x) + C","e^(-x) + C","-xe^(-x) + C","e^x + C"],"answer":"-e^(-x) + C"},{"id":"U6-042","question":"Evaluate ∫(1/(2x)) dx.","options":["(1/2)ln|x| + C","ln|2x| + C","1/(2x^2) + C","2ln|x| + C"],"answer":"(1/2)ln|x| + C"},{"id":"U6-043","question":"Use u-substitution: ∫sin(3x) dx.","options":["-cos(3x)/3 + C","cos(3x)/3 + C","-3cos(3x) + C","sin(3x)/3 + C"],"answer":"-cos(3x)/3 + C"},{"id":"U6-044","question":"Evaluate ∫x sqrt(x^2+1) dx.","options":["(1/3)(x^2+1)^(3/2) + C","(1/2)(x^2+1)^(3/2) + C","(2/3)(x^2+1)^(3/2) + C","(x^2+1)^(3/2) + C"],"answer":"(1/3)(x^2+1)^(3/2) + C"},{"id":"U6-045","question":"Evaluate ∫(tan x sec^2 x) dx.","options":["tan^2 x/2 + C","sec^2 x/2 + C","tan x + C","sec^3 x/3 + C"],"answer":"tan^2 x/2 + C"},{"id":"U6-046","question":"Evaluate ∫(ln x)^2/x dx.","options":["(ln x)^3/3 + C","(ln x)^2/2 + C","ln x + C","1/ln x + C"],"answer":"(ln x)^3/3 + C"},{"id":"U6-047","question":"Evaluate ∫(1/(sqrt(x)(1+x))) dx with u = sqrt(x).","options":["2 arctan(sqrt(x)) + C","arctan x + C","2 sqrt(x) + C","ln(1+x) + C"],"answer":"2 arctan(sqrt(x)) + C"},{"id":"U6-048","question":"Evaluate ∫x^2 e^(x^3) dx.","options":["(1/3)e^(x^3) + C","e^(x^3) + C","3e^(x^3) + C","x^3 e^(x^3) + C"],"answer":"(1/3)e^(x^3) + C"},{"id":"U6-049","question":"Evaluate ∫(3x^2)/(x^3+1) dx.","options":["ln|x^3+1| + C","3ln|x^3+1| + C","arctan(x^3) + C","x^3/(x^3+1) + C"],"answer":"ln|x^3+1| + C"},{"id":"U6-050","question":"Evaluate ∫_0^1 (2x+1) dx.","options":["2","1","3","0"],"answer":"2"},{"id":"U6-051","question":"The area between y = x and y = x^2 on [0, 1] is:","options":["1/6","1/3","1/2","1"],"answer":"1/6"},{"id":"U6-052","question":"Evaluate ∫(x^2+1)^2 dx.","options":["x^5/5 + 2x^3/3 + x + C","x^5/5 + x^3 + x + C","(x^2+1)^3/3 + C","2x(x^2+1) + C"],"answer":"x^5/5 + 2x^3/3 + x + C"},{"id":"U6-053","question":"Evaluate ∫cos(3x) dx.","options":["sin(3x)/3 + C","3sin(3x) + C","-sin(3x)/3 + C","cos(3x)/3 + C"],"answer":"sin(3x)/3 + C"},{"id":"U6-054","question":"Evaluate ∫(1/(x ln x)) dx.","options":["ln|ln x| + C","ln x + C","1/ln x + C","x ln x + C"],"answer":"ln|ln x| + C"},{"id":"U6-055","question":"Evaluate ∫sec^2(2x) dx.","options":["(1/2)tan(2x) + C","tan(2x) + C","2tan(2x) + C","sec(2x) + C"],"answer":"(1/2)tan(2x) + C"},{"id":"U6-056","question":"Evaluate ∫_1^2 (1/x) dx.","options":["ln 2","1","ln 2 - 1","2"],"answer":"ln 2"},{"id":"U6-057","question":"If G(x) = ∫_1^(x^3) sin t dt, G'(x) =","options":["3x^2 sin(x^3)","sin(x^3)","3x^2 cos(x^3)","sin x"],"answer":"3x^2 sin(x^3)"},{"id":"U6-058","question":"Evaluate ∫(x^2+1)/(x) dx.","options":["x^2/2 + ln|x| + C","x + 1/x + C","x^2 + ln|x| + C","x^2/2 - ln|x| + C"],"answer":"x^2/2 + ln|x| + C"},{"id":"U6-059","question":"Evaluate ∫cot x dx.","options":["ln|sin x| + C","-ln|sin x| + C","ln|cos x| + C","-ln|cos x| + C"],"answer":"ln|sin x| + C"},{"id":"U6-060","question":"Evaluate ∫(1/sqrt(x)) dx.","options":["2sqrt(x) + C","sqrt(x)/2 + C","1/sqrt(x) + C","x^(1/2) + C"],"answer":"2sqrt(x) + C"},{"id":"U6-061","question":"Evaluate ∫x^2/(x^3+1) dx.","options":["(1/3)ln|x^3+1| + C","ln|x^3+1| + C","3ln|x^3+1| + C","arctan(x^3) + C"],"answer":"(1/3)ln|x^3+1| + C"},{"id":"U6-062","question":"Evaluate ∫_0^(π/4) sec^2 x dx.","options":["1","π/4","√2","0"],"answer":"1"},{"id":"U6-063","question":"Evaluate ∫(x^2+2)/(x) dx.","options":["x^2/2 + 2ln|x| + C","x^2 + 2ln|x| + C","x + 2/x + C","x^2/2 - 2ln|x| + C"],"answer":"x^2/2 + 2ln|x| + C"},{"id":"U6-064","question":"Evaluate ∫sin(2x) dx.","options":["-cos(2x)/2 + C","cos(2x)/2 + C","-2cos(2x) + C","-sin(2x)/2 + C"],"answer":"-cos(2x)/2 + C"},{"id":"U6-065","question":"Using integration by parts, evaluate ∫x^2 ln x dx.","options":["(x^3/3)ln x - x^3/9 + C","(x^3/3)ln x + x^3/9 + C","x^3 ln x - x^3/3 + C","(x^2/2)ln x - x^2/4 + C"],"answer":"(x^3/3)ln x - x^3/9 + C"},{"id":"U6-066","question":"Evaluate ∫(2x+3)^5 dx.","options":["(2x+3)^6/12 + C","(2x+3)^6/6 + C","(2x+3)^4 + C","5(2x+3)^4 + C"],"answer":"(2x+3)^6/12 + C"},{"id":"U6-067","question":"Evaluate ∫(cos^2 x) dx.","options":["x/2 + sin(2x)/4 + C","x/2 - sin(2x)/4 + C","sin^3 x/3 + C","x + sin(2x) + C"],"answer":"x/2 + sin(2x)/4 + C"},{"id":"U6-068","question":"Evaluate ∫e^(cos x) sin x dx.","options":["-e^(cos x) + C","e^(cos x) + C","e^(sin x) + C","cos x e^(cos x) + C"],"answer":"-e^(cos x) + C"},{"id":"U6-069","question":"Evaluate ∫_0^2 (x^3) dx.","options":["4","2","8","16"],"answer":"4"},{"id":"U6-070","question":"Evaluate ∫(1/(x^2+9)) dx.","options":["(1/3)arctan(x/3) + C","arctan(x/3) + C","3arctan(x/3) + C","ln(x^2+9) + C"],"answer":"(1/3)arctan(x/3) + C"}]},{"unit":7,"title":"Differential Equations","problems":[{"id":"U7-001","question":"What is the general solution to dy/dx = ky?","options":["y = Ce^(kx)","y = C + kx","y = kx + C","y = C/k"],"answer":"y = Ce^(kx)"},{"id":"U7-002","question":"Solve dy/dx = 2x with y(0) = 3.","options":["y = x^2 + 3","y = 2x + 3","y = x^2","y = 2x^2 + 3"],"answer":"y = x^2 + 3"},{"id":"U7-003","question":"Solve dy/dx = y with y(0) = 2.","options":["y = 2e^x","y = e^(2x)","y = 2e^(2x)","y = e^x + 2"],"answer":"y = 2e^x"},{"id":"U7-004","question":"Solve dy/dx = 3y with y(0) = 5.","options":["y = 5e^(3x)","y = 3e^(5x)","y = 5e^x","y = e^(3x) + 5"],"answer":"y = 5e^(3x)"},{"id":"U7-005","question":"The differential equation dy/dx = x/y is:","options":["Separable","Linear","Both A and B","Neither"],"answer":"Separable"},{"id":"U7-006","question":"Solve dy/dx = x/y, y > 0, with y(0) = 2.","options":["y = sqrt(x^2+4)","y = sqrt(x^2) + 2","y = x + 2","y = (x^2+4)/2"],"answer":"y = sqrt(x^2+4)"},{"id":"U7-007","question":"Solve dy/dx = 2xy with y(0) = 1.","options":["y = e^(x^2)","y = e^(2x)","y = e^(x^2)/2","y = 2e^(x^2)"],"answer":"y = e^(x^2)"},{"id":"U7-008","question":"Solve dy/dt = -0.5y with y(0) = 100.","options":["y = 100e^(-0.5t)","y = 100e^(0.5t)","y = 50e^(-t)","y = 100 - 0.5t"],"answer":"y = 100e^(-0.5t)"},{"id":"U7-009","question":"The general solution of dy/dx + y = 0 is:","options":["y = Ce^(-x)","y = Ce^x","y = C","y = Cx"],"answer":"y = Ce^(-x)"},{"id":"U7-010","question":"If a population grows at rate proportional to its size with k = 0.02 and initial population 500, the population at time t is:","options":["P = 500e^(0.02t)","P = 500(1.02)^t","P = 500 + 0.02t","P = 500e^(2t)"],"answer":"P = 500e^(0.02t)"},{"id":"U7-011","question":"Solve dy/dx = 6x^2 with y(0) = 1.","options":["y = 2x^3 + 1","y = 6x^3 + 1","y = 2x^3","y = 3x^2 + 1"],"answer":"y = 2x^3 + 1"},{"id":"U7-012","question":"Solve dy/dx = 1/x with y(1) = 2.","options":["y = ln x + 2","y = ln x - 2","y = 1/x + 2","y = ln(x) + 1"],"answer":"y = ln x + 2"},{"id":"U7-013","question":"The solution to dy/dx = -2y with y(0) = 4 is:","options":["y = 4e^(-2x)","y = 4e^(2x)","y = -4e^(-2x)","y = e^(-2x) + 4"],"answer":"y = 4e^(-2x)"},{"id":"U7-014","question":"Solve dy/dx = y^2, y(0) = 1.","options":["y = 1/(1 - x)","y = 1/(1 + x)","y = e^x","y = 1 - x"],"answer":"y = 1/(1 - x)"},{"id":"U7-015","question":"Solve dy/dx = 2y/x with y(1) = 3.","options":["y = 3x^2","y = 3x","y = x^2 + 2","y = 3e^x"],"answer":"y = 3x^2"},{"id":"U7-016","question":"The general solution of dy/dx + 2y = 0 is:","options":["y = Ce^(-2x)","y = Ce^(2x)","y = 2Ce^x","y = Ce^(-x)"],"answer":"y = Ce^(-2x)"},{"id":"U7-017","question":"Newton's Law of Cooling: dT/dt = -k(T - T_s). If T_s = 20, k = 0.1, T(0) = 100, then T(t) =","options":["80e^(-0.1t) + 20","100e^(-0.1t)","80e^(0.1t) + 20","20e^(-0.1t) + 80"],"answer":"80e^(-0.1t) + 20"},{"id":"U7-018","question":"Exponential decay: dy/dx = -0.3y, y(0) = 50. Find y(10).","options":["50e^(-3)","50e^(-0.3)","50e^(3)","50(0.3)^10"],"answer":"50e^(-3)"},{"id":"U7-019","question":"Solve dy/dx = 4x^3 with y(0) = 2.","options":["y = x^4 + 2","y = 4x^4 + 2","y = x^4","y = 12x^2 + 2"],"answer":"y = x^4 + 2"},{"id":"U7-020","question":"Solve dy/dx = cos x with y(0) = 1.","options":["y = sin x + 1","y = sin x","y = cos x + 1","y = -sin x + 1"],"answer":"y = sin x + 1"},{"id":"U7-021","question":"If dy/dx = x/y, the solution curves are:","options":["Circles","Hyperbolas","Lines","Parabolas"],"answer":"Hyperbolas"},{"id":"U7-022","question":"Solve dy/dx = 1/(2y) with y(0) = 1.","options":["y = sqrt(x+1)","y = sqrt(x) + 1","y = (x+1)/2","y = x/2 + 1"],"answer":"y = sqrt(x+1)"},{"id":"U7-023","question":"The slope field for dy/dx = x has:","options":["Slope depends only on x","Slope depends only on y","Slope independent of both","Slope = 0 everywhere"],"answer":"Slope depends only on x"},{"id":"U7-024","question":"Solve dy/dx = e^(2x) with y(0) = 0.","options":["y = (1/2)(e^(2x) - 1)","y = e^(2x) - 1","y = 2e^(2x) + 2","y = (1/2)e^(2x)"],"answer":"y = (1/2)(e^(2x) - 1)"},{"id":"U7-025","question":"If a radioactive substance has half-life 5 years, its decay constant k is:","options":["(ln 2)/5","5/ln 2","-5 ln 2","(ln 5)/2"],"answer":"(ln 2)/5"},{"id":"U7-026","question":"Logistic growth: dP/dt = kP(1 - P/L). The carrying capacity is:","options":["L","k","P0","e^k"],"answer":"L"},{"id":"U7-027","question":"The solution to the logistic equation has an inflection point at P =","options":["L/2","L","0","kL"],"answer":"L/2"},{"id":"U7-028","question":"Solve dy/dx = 2x + 1 with y(0) = 3.","options":["y = x^2 + x + 3","y = x^2 + 3","y = 2x^2 + x + 3","y = x^2 + x"],"answer":"y = x^2 + x + 3"},{"id":"U7-029","question":"If dy/dt = -ky and y halves in 10 days, find k.","options":["(ln 2)/10","10 ln 2","ln 10/2","10/ln 2"],"answer":"(ln 2)/10"},{"id":"U7-030","question":"Solve dy/dx = 3x^2 y with y(0) = 1.","options":["y = e^(x^3)","y = e^(3x)","y = e^(x^3)/3","y = 3e^(x^3)"],"answer":"y = e^(x^3)"},{"id":"U7-031","question":"Solve dy/dx = y/x with y(1) = 2.","options":["y = 2x","y = 2x + 1","y = x^2 + 1","y = 2/x"],"answer":"y = 2x"},{"id":"U7-032","question":"Solve dy/dx = sec^2 x with y(0) = 1.","options":["y = tan x + 1","y = tan x","y = sec x + 1","y = -tan x + 1"],"answer":"y = tan x + 1"},{"id":"U7-033","question":"Solve dy/dx = e^x with y(0) = 2.","options":["y = e^x + 1","y = e^x + 2","y = e^x - 1","y = 2e^x"],"answer":"y = e^x + 1"},{"id":"U7-034","question":"If dy/dx = 4 - y, the equilibrium solution is:","options":["y = 4","y = 0","y = -4","y = x"],"answer":"y = 4"},{"id":"U7-035","question":"Solve dy/dx = 2x/(y+1) with y(0) = 1.","options":["y = -1 + sqrt(2x^2+4)","y = -1 + sqrt(2x^2)","y = sqrt(2x^2+4)","y = 1 + sqrt(2x^2)"],"answer":"y = -1 + sqrt(2x^2+4)"},{"id":"U7-036","question":"The differential equation y' = y - x is:","options":["Linear","Separable","Homogeneous","Exact"],"answer":"Linear"},{"id":"U7-037","question":"The solution to dy/dx + y = 1 with y(0) = 0 is:","options":["y = 1 - e^(-x)","y = e^x - 1","y = 1 - e^x","y = e^(-x)"],"answer":"y = 1 - e^(-x)"},{"id":"U7-038","question":"If a bacteria culture grows from 100 to 400 in 2 hours, find the growth constant k.","options":["(ln 4)/2","ln 2","2 ln 4","ln 4"],"answer":"(ln 4)/2"},{"id":"U7-039","question":"Solve dy/dt = 0.05y(1 - y/1000) with y(0) = 100. The solution approaches:","options":["1000","0","100","∞"],"answer":"1000"},{"id":"U7-040","question":"Solve dy/dx = y/x^2 with y(1) = 1.","options":["y = e^(1 - 1/x)","y = e^(-1/x)","y = e^(1/x)","y = x + 1"],"answer":"y = e^(1 - 1/x)"},{"id":"U7-041","question":"The general solution of dy/dx = 3x^2 is:","options":["y = x^3 + C","y = 6x + C","y = 3x^3 + C","y = x^3/3 + C"],"answer":"y = x^3 + C"},{"id":"U7-042","question":"If dy/dx = -x/y, the solution through (1, 1) is:","options":["x^2 + y^2 = 2","x^2 + y^2 = 1","y = x","y = 1/x"],"answer":"x^2 + y^2 = 2"},{"id":"U7-043","question":"Solve dy/dx = 5y, y(0) = 1. What is y(1)?","options":["e^5","5e","e","5"],"answer":"e^5"},{"id":"U7-044","question":"A cup of coffee cools from 90°C to 70°C in 10 min in a 20°C room. Find the temperature at time t.","options":["20 + 70e^(-kt) where e^(-10k) = 50/70","20 + 70e^(-t/10)","90e^(-10t) + 20","70e^(-10t)"],"answer":"20 + 70e^(-kt) where e^(-10k) = 50/70"},{"id":"U7-045","question":"Solve dy/dx = 1/(1+x^2) with y(0) = 0.","options":["y = arctan x","y = arcsin x","y = ln(1+x^2)","y = 1/(1+x^2)"],"answer":"y = arctan x"},{"id":"U7-046","question":"Solve dy/dx = (2x)/(y) with y(0) = 2.","options":["y = sqrt(2x^2+4)","y = sqrt(2x^2) + 2","y = 2x + 2","y = x^2 + 2"],"answer":"y = sqrt(2x^2+4)"},{"id":"U7-047","question":"The equilibrium solutions of dy/dx = y^2 - 4 are:","options":["y = 2, -2","y = 4","y = 0","y = 2"],"answer":"y = 2, -2"},{"id":"U7-048","question":"Solve dy/dx = 2xy^2 with y(0) = 1.","options":["y = 1/(1 - x^2)","y = e^(x^2)","y = 1/(1 + x^2)","y = 1 - x^2"],"answer":"y = 1/(1 - x^2)"},{"id":"U7-049","question":"Half-life of carbon-14 is 5730 years. Its decay constant is approximately:","options":["1.21 × 10^(-4)","3.82 × 10^(-12)","5730","0.693"],"answer":"1.21 × 10^(-4)"},{"id":"U7-050","question":"Solve dy/dx = 3x^2/y with y(0) = 2.","options":["y = sqrt(2x^3+4)","y = sqrt(2x^3) + 2","y = x^3 + 2","y = sqrt(x^3+4)"],"answer":"y = sqrt(2x^3+4)"},{"id":"U7-051","question":"The differential equation dy/dx = y^2 - x is:","options":["Neither separable nor linear","Separable","Linear","Both separable and linear"],"answer":"Neither separable nor linear"},{"id":"U7-052","question":"Solve dy/dx = 4y with y(0) = 3. What is y(0.5)?","options":["3e^2","3e^(0.5)","3e^4","3e^(0.25)"],"answer":"3e^2"},{"id":"U7-053","question":"Solve dy/dx = cos(2x) with y(0) = 0.","options":["y = sin(2x)/2","y = sin(2x)","y = -sin(2x)/2","y = cos(2x)/2"],"answer":"y = sin(2x)/2"},{"id":"U7-054","question":"Solve dy/dx = 1/(x+1) with y(0) = 0.","options":["y = ln(x+1)","y = ln x","y = 1/(x+1)","y = x/(x+1)"],"answer":"y = ln(x+1)"},{"id":"U7-055","question":"Population grows from 100 to 200 in 5 years. What is the doubling time?","options":["5 years","10 years","2.5 years","15 years"],"answer":"5 years"},{"id":"U7-056","question":"If dy/dx = x^2 y, the general solution is:","options":["y = Ce^(x^3/3)","y = Ce^(x^2)","y = Ce^(2x)","y = Cx^2"],"answer":"y = Ce^(x^3/3)"},{"id":"U7-057","question":"Solve dy/dx = sec x tan x with y(0) = 1.","options":["y = sec x","y = sec x + 1","y = tan x + 1","y = sec x - 1"],"answer":"y = sec x"},{"id":"U7-058","question":"Solve dy/dx = 2/(y+1) with y(0) = 0.","options":["y = -1 + sqrt(4x+1)","y = sqrt(4x) - 1","y = sqrt(4x+1)","y = 2x - 1"],"answer":"y = -1 + sqrt(4x+1)"},{"id":"U7-059","question":"The logistic differential equation has solution:","options":["P(t) = L/(1 + Ae^(-kt))","P(t) = Ce^(kt)","P(t) = L - Ce^(-kt)","P(t) = kt + C"],"answer":"P(t) = L/(1 + Ae^(-kt))"},{"id":"U7-060","question":"Solve dy/dx = -3x^2 with y(1) = 4.","options":["y = -x^3 + 5","y = -x^3 + 4","y = -3x^3 + 7","y = x^3 + 3"],"answer":"y = -x^3 + 5"},{"id":"U7-061","question":"Solve dy/dx = 2x(y-1) with y(0) = 2.","options":["y = 1 + e^(x^2)","y = 2e^(x^2)","y = 1 + e^(2x)","y = e^(x^2) + 1"],"answer":"y = 1 + e^(x^2)"},{"id":"U7-062","question":"If dy/dx = y and y(0) = 1, what is y(2)?","options":["e^2","2e","e","2"],"answer":"e^2"},{"id":"U7-063","question":"Solve dy/dx = 1/(sqrt(x)) with y(1) = 0.","options":["y = 2sqrt(x) - 2","y = 2sqrt(x)","y = sqrt(x) - 1","y = x^(1/2)"],"answer":"y = 2sqrt(x) - 2"},{"id":"U7-064","question":"The solution of y' = y with y(0) = -1 is:","options":["y = -e^x","y = e^(-x)","y = -e^(-x)","y = e^x - 2"],"answer":"y = -e^x"},{"id":"U7-065","question":"Solve dy/dx = e^(-x) with y(0) = 3.","options":["y = -e^(-x) + 4","y = e^(-x) + 2","y = -e^(-x) + 3","y = e^(-x) + 3"],"answer":"y = -e^(-x) + 4"},{"id":"U7-066","question":"If dy/dx = -0.02y and y(0) = 200, what is y(50)?","options":["200e^(-1)","200e^(1)","200e^(-0.5)","200(1.02)^50"],"answer":"200e^(-1)"},{"id":"U7-067","question":"Solve dy/dx = (1+y^2)/(1+x^2) with y(0) = 1.","options":["y = tan(arctan x + π/4)","y = tan(arctan x)","y = arctan x + 1","y = x + 1"],"answer":"y = tan(arctan x + π/4)"},{"id":"U7-068","question":"Solve dy/dx = 2x cos(x^2) with y(0) = 1.","options":["y = sin(x^2) + 1","y = sin(x^2)","y = cos(x^2) + 1","y = 2sin(x^2) + 1"],"answer":"y = sin(x^2) + 1"},{"id":"U7-069","question":"If dy/dx = 3y and y(0) = 2, find y(ln 2).","options":["16","8","6","12"],"answer":"16"},{"id":"U7-070","question":"Solve dy/dx = x^2/y^2 with y(0) = 1.","options":["y = (x^3+1)^(1/3)","y = (x^3)^(1/3) + 1","y = (3x^3+1)^(1/3)","y = x + 1"],"answer":"y = (x^3+1)^(1/3)"}]},{"unit":8,"title":"Applications of Integration","problems":[{"id":"U8-001","question":"The area between y = x^2 and y = x from x = 0 to x = 1 is:","options":["1/6","1/3","1/2","1"],"answer":"1/6"},{"id":"U8-002","question":"The area between y = e^x and y = 1 from x = 0 to x = 1 is:","options":["e - 2","e - 1","e","1"],"answer":"e - 2"},{"id":"U8-003","question":"The volume of the solid obtained by rotating y = sqrt(x) about the x-axis from x = 0 to x = 4 is:","options":["8π","4π","2π","16π"],"answer":"8π"},{"id":"U8-004","question":"The volume of the solid of revolution of y = x about the x-axis from x = 0 to x = 3 using disks is:","options":["9π","27π","3π","6π"],"answer":"9π"},{"id":"U8-005","question":"The average value of f(x) = x^2 on [0, 3] is:","options":["3","9","1","6"],"answer":"3"},{"id":"U8-006","question":"The average value of f(x) = sin x on [0, π] is:","options":["2/π","1/π","1","π/2"],"answer":"2/π"},{"id":"U8-007","question":"The area between y = x^3 and y = x on [-1, 1] is:","options":["1/2","1","1/4","0"],"answer":"1/2"},{"id":"U8-008","question":"The volume of a solid with cross-sections perpendicular to the x-axis being squares of side sqrt(x) from x = 0 to x = 4 is:","options":["8","4","16","2"],"answer":"8"},{"id":"U8-009","question":"The volume of the solid obtained by rotating y = 1/x about the x-axis from x = 1 to x = e is:","options":["π(1 - 1/e)","π(1/e)","π(e - 1)","π"],"answer":"π(1 - 1/e)"},{"id":"U8-010","question":"The length of the curve y = x^(3/2) from x = 0 to x = 1 is:","options":["(8/27)(10^(3/2) - 1)","(8/27)(13^(3/2) - 1)","(1/27)(10^(3/2) - 1)","(8/27)(10^(1/2) - 1)"],"answer":"(8/27)(10^(3/2) - 1)"},{"id":"U8-011","question":"Area between y = x^2 and y = 2x is:","options":["4/3","2/3","8/3","1/3"],"answer":"4/3"},{"id":"U8-012","question":"Area between y = ln x and y = 0 on [1, e] is:","options":["1","e","e - 1","1/e"],"answer":"1"},{"id":"U8-013","question":"Volume of solid rotating y = x^2 about the y-axis from y = 0 to y = 4 using shells is:","options":["8π","16π","4π","32π"],"answer":"8π"},{"id":"U8-014","question":"Volume of solid obtained by rotating y = x from x = 0 to x = 2 about the y-axis using shells is:","options":["16π/3","8π/3","4π/3","2π/3"],"answer":"16π/3"},{"id":"U8-015","question":"The average value of f(x) = 1/x on [1, e] is:","options":["1/(e-1)","1","e","e-1"],"answer":"1/(e-1)"},{"id":"U8-016","question":"The distance traveled by a particle with velocity v(t) = t from t = 0 to t = 3 is:","options":["9/2","3","9","6"],"answer":"9/2"},{"id":"U8-017","question":"If v(t) = 3t^2 - 2t, the displacement from t = 0 to t = 2 is:","options":["4","2","6","0"],"answer":"4"},{"id":"U8-018","question":"If a force F(x) = 2x acts on an object from x = 0 to x = 3, the work done is:","options":["9","6","3","18"],"answer":"9"},{"id":"U8-019","question":"The area under y = sqrt(1 - x^2) from x = -1 to x = 1 is:","options":["π/2","π","π/4","2"],"answer":"π/2"},{"id":"U8-020","question":"The volume of a cone generated by rotating y = x/2 from x = 0 to x = 4 about the x-axis is:","options":["8π/3","16π/3","4π/3","32π/3"],"answer":"16π/3"},{"id":"U8-021","question":"The area bounded by y = 4 - x^2 and the x-axis is:","options":["32/3","16/3","8/3","4"],"answer":"32/3"},{"id":"U8-022","question":"The total distance traveled by a particle with v(t) = t^2 - 4 on [0, 3] is:","options":["23/3","7","5","13/3"],"answer":"23/3"},{"id":"U8-023","question":"Volume of solid rotating y = e^x from x = 0 to x = 1 about the x-axis is:","options":["π(e^2 - 1)/2","π(e^2 + 1)/2","π(e - 1)","π e^2"],"answer":"π(e^2 - 1)/2"},{"id":"U8-024","question":"The area between y = x^2 and y = sqrt(x) from x = 0 to x = 1 is:","options":["1/3","1/6","1/2","2/3"],"answer":"1/3"},{"id":"U8-025","question":"Average value of f(x) = x^3 on [-1, 1] is:","options":["0","1/4","1/2","1"],"answer":"0"},{"id":"U8-026","question":"Volume of solid with triangular cross-sections (height = base) perpendicular to x-axis, base sqrt(x) from x = 0 to 4 is:","options":["2","4","8","16"],"answer":"4"},{"id":"U8-027","question":"Arc length of y = x from x = 0 to x = 1 is:","options":["√2","2","1","√3"],"answer":"√2"},{"id":"U8-028","question":"Area between y = 1/x and y = x from x = 1 to x = 2 is:","options":["ln 2 - 3/2","ln 2 - 1/2","3/2 - ln 2","ln 2 + 1/2"],"answer":"3/2 - ln 2"},{"id":"U8-029","question":"Volume of solid rotating y = sqrt(x) about y-axis from x = 0 to 4 using shells is:","options":["64π/5","32π/5","16π/5","8π/5"],"answer":"64π/5"},{"id":"U8-030","question":"The displacement of a particle with v(t) = 6t - t^2 from t = 0 to t = 6 is:","options":["36","18","72","0"],"answer":"36"},{"id":"U8-031","question":"The average rate of change of f(x) = x^2 on [0, 2] is:","options":["2","4","1","0"],"answer":"2"},{"id":"U8-032","question":"Total distance traveled by v(t) = |t - 1| on [0, 2] is:","options":["1","2","0.5","1.5"],"answer":"1"},{"id":"U8-033","question":"The volume of revolution of y = x^2 about y = -1 from x = 0 to 1 using washers is:","options":["π(1/5 + 2/3 + 1)","π(1/5 - 2/3 + 1)","π(1/5 + 2/3 - 1)","π(1/5 - 2/3 - 1)"],"answer":"π(1/5 + 2/3 + 1)"},{"id":"U8-034","question":"Area between y = sin x and y = cos x from x = 0 to π/4 is:","options":["√2 - 1","1 - √2/2","√2/2","2 - √2"],"answer":"√2 - 1"},{"id":"U8-035","question":"Volume of solid with semicircular cross-sections perpendicular to x-axis, diameter = sqrt(x) from x = 0 to 4 is:","options":["π/4","π/8","π/2","π"],"answer":"π/4"},{"id":"U8-036","question":"If a spring requires 10 J to stretch from 0 to 0.5 m, the spring constant is:","options":["80 N/m","40 N/m","20 N/m","10 N/m"],"answer":"80 N/m"},{"id":"U8-037","question":"The area between y = x^2 - 4 and y = 0 is:","options":["32/3","16/3","8/3","4"],"answer":"32/3"},{"id":"U8-038","question":"Volume of y = x from x = 0 to 2 about y-axis using shells:","options":["16π/3","8π/3","4π/3","2π/3"],"answer":"16π/3"},{"id":"U8-039","question":"The average value of f(x) = 3x^2 on [0, 2] is:","options":["4","2","8","6"],"answer":"4"},{"id":"U8-040","question":"Arc length of y = (2/3)x^(3/2) from x = 0 to 3 is:","options":["(2/3)(8 - 1)","(2/3)(8 + 1)","(8/3)","(2/3)(7)"],"answer":"(2/3)(8 - 1)"},{"id":"U8-041","question":"Area between x = y^2 and x = 4 is:","options":["32/3","16/3","8/3","4"],"answer":"32/3"},{"id":"U8-042","question":"The volume of a sphere of radius r using integration is:","options":["(4/3)πr^3","πr^3","(4/3)πr^2","2πr^3"],"answer":"(4/3)πr^3"},{"id":"U8-043","question":"If v(t) = 2t for t in [0, 3], the displacement is:","options":["9","6","3","18"],"answer":"9"},{"id":"U8-044","question":"The work done by F(x) = x^2 from x = 0 to x = 3 is:","options":["9","27","3","6"],"answer":"9"},{"id":"U8-045","question":"The area bounded by y = 1/x^2, y = 0, x = 1, x = 3 is:","options":["2/3","1/3","1","4/3"],"answer":"2/3"},{"id":"U8-046","question":"The volume of rotating y = sqrt(x) about y = 0 from x = 0 to 1 using disks is:","options":["π/2","π","π/4","2π"],"answer":"π/2"},{"id":"U8-047","question":"Average value of f(x) = cos x on [0, π/2] is:","options":["2/π","1/π","1","π/2"],"answer":"2/π"},{"id":"U8-048","question":"Area between y = x^2 and y = 4 is:","options":["32/3","16/3","8/3","4"],"answer":"32/3"},{"id":"U8-049","question":"The displacement of a particle with v(t) = t^2 - t from t = 0 to 2 is:","options":["2/3","1/3","4/3","1"],"answer":"2/3"},{"id":"U8-050","question":"The total distance traveled by v(t) = t^2 - t on [0, 2] is:","options":["1","2/3","1/3","4/3"],"answer":"1"},{"id":"U8-051","question":"Volume of solid rotating y = x^2 about x-axis from x = 0 to 1 is:","options":["π/5","π/3","π/2","π"],"answer":"π/5"},{"id":"U8-052","question":"Area between y = e^x and y = e^(-x) from x = 0 to 1 is:","options":["e + 1/e - 2","e - 1/e","e + 1/e","e - 1/e - 2"],"answer":"e + 1/e - 2"},{"id":"U8-053","question":"Volume of solid rotating y = 1/x from x = 1 to x = 2 about x-axis is:","options":["π/2","π","π/4","2π"],"answer":"π/2"},{"id":"U8-054","question":"The length of the curve y = x^2 from x = 0 to 1 is approximately:","options":["1.479","1.414","1.5","1.333"],"answer":"1.479"},{"id":"U8-055","question":"The average value of f(x) = sqrt(x) on [0, 4] is:","options":["4/3","2/3","8/3","1/3"],"answer":"4/3"},{"id":"U8-056","question":"The area between y = x and y = x^3 from x = 0 to x = 1 is:","options":["1/4","1/2","1/3","1/6"],"answer":"1/4"},{"id":"U8-057","question":"Volume of solid rotating y = x from x = 0 to 1 about x = 2 using shells is:","options":["4π/3","2π/3","8π/3","π/3"],"answer":"4π/3"},{"id":"U8-058","question":"The volume of solid with equilateral triangle cross-sections (side = sqrt(x)) from x = 0 to 4 is:","options":["√3","2√3","√3/2","3√3"],"answer":"√3"},{"id":"U8-059","question":"If v(t) = cos t on [0, π/2], the displacement is:","options":["1","0","π/2","2"],"answer":"1"},{"id":"U8-060","question":"The area bounded by y = |x| and y = 2 is:","options":["4","8","2","6"],"answer":"4"},{"id":"U8-061","question":"The work done stretching a spring from 0.1 m to 0.2 m with k = 100 N/m is:","options":["1.5 J","0.5 J","2 J","1 J"],"answer":"1.5 J"},{"id":"U8-062","question":"Area between y = 2x and y = x^2 - 3 is:","options":["32/3","16/3","8/3","4"],"answer":"32/3"},{"id":"U8-063","question":"The average value of f(x) = 1/(1+x^2) on [0, 1] is:","options":["π/4","π/2","1","2"],"answer":"π/4"},{"id":"U8-064","question":"Volume of solid rotating y = 2x from x = 0 to 1 about x-axis is:","options":["4π/3","2π/3","8π/3","π/3"],"answer":"4π/3"},{"id":"U8-065","question":"The displacement of a particle with v(t) = 1/(t+1) from t = 0 to t = e - 1 is:","options":["1","e","ln 2","e-1"],"answer":"1"},{"id":"U8-066","question":"Volume of solid with square cross-sections (side = y = e^(-x)) from x = 0 to x = 1 is:","options":["(1 - e^(-2))/2","1 - e^(-2)","(1 + e^(-2))/2","1 + e^(-2)"],"answer":"(1 - e^(-2))/2"},{"id":"U8-067","question":"Area between y = x and y = x^2 - 2 from x = -1 to x = 2 is:","options":["9/2","5/2","7/2","11/2"],"answer":"9/2"},{"id":"U8-068","question":"The total distance traveled by v(t) = 3t^2 - 6t on [0, 3] is:","options":["8","4","2","6"],"answer":"8"},{"id":"U8-069","question":"The arc length of y = ln(cos x) from x = 0 to π/4 is:","options":["ln(√2 + 1)","ln(√2 - 1)","√2","π/4"],"answer":"ln(√2 + 1)"},{"id":"U8-070","question":"The volume of a solid generated by revolving y = 1 - x^2 about the x-axis from x = -1 to x = 1 is:","options":["16π/15","8π/15","4π/15","2π/15"],"answer":"16π/15"}]},{"unit":9,"title":"Parametric Equations, Polar Coordinates, and Vector-Valued Functions","problems":[{"id":"U9-001","question":"Given x = t^2, y = t^3, what is dy/dx?","options":["3t/2","2t/3t^2","3t^2","2t/3"],"answer":"3t/2"},{"id":"U9-002","question":"Given x = cos t, y = sin t, what is dy/dx?","options":["-cot t","tan t","cot t","-tan t"],"answer":"-cot t"},{"id":"U9-003","question":"Given x = t^2, y = t^3, what is d²y/dx²?","options":["3/(4t)","3/(2t)","3t/4","3/(4t^2)"],"answer":"3/(4t)"},{"id":"U9-004","question":"The slope of the tangent to x = t^2, y = t^3 at t = 2 is:","options":["3","2","4","6"],"answer":"3"},{"id":"U9-005","question":"The length of the curve x = t^2, y = (2/3)t^3 from t = 0 to t = 1 is:","options":["(5√5 - 1)/3","5√5/3","(5√5 + 1)/3","√5/3"],"answer":"(5√5 - 1)/3"},{"id":"U9-006","question":"The area enclosed by x = a cos t, y = a sin t is:","options":["πa²","2πa²","πa²/2","4πa²"],"answer":"πa²"},{"id":"U9-007","question":"Convert the polar equation r = 2 to rectangular form.","options":["x^2 + y^2 = 4","x + y = 2","x^2 - y^2 = 4","x = 2"],"answer":"x^2 + y^2 = 4"},{"id":"U9-008","question":"Convert x^2 + y^2 = 9 to polar form.","options":["r = 3","r = 9","r^2 = 9","θ = 3"],"answer":"r = 3"},{"id":"U9-009","question":"The area enclosed by r = 3 is:","options":["9π","6π","3π","π"],"answer":"9π"},{"id":"U9-010","question":"The slope of r = 1 + cos θ at θ = π/2 is:","options":["-1","1","0","∞"],"answer":"-1"},{"id":"U9-011","question":"For r = 2 cos θ, what is the Cartesian equation?","options":["x^2 + y^2 = 2x","x^2 + y^2 = 2y","x^2 + y^2 = 4","x^2 + y^2 = 1"],"answer":"x^2 + y^2 = 2x"},{"id":"U9-012","question":"The vector-valued function r(t) = <t, t^2> has derivative:","options":["<1, 2t>","<t, 2t>","<2t, 1>","<1, t>"],"answer":"<1, 2t>"},{"id":"U9-013","question":"The velocity vector for r(t) = <cos t, sin t> is:","options":["<-sin t, cos t>","<sin t, -cos t>","<cos t, sin t>","<-cos t, -sin t>"],"answer":"<-sin t, cos t>"},{"id":"U9-014","question":"The acceleration vector for r(t) = <t^2, t^3> at t = 1 is:","options":["<2, 6>","<2, 3>","<1, 2>","<4, 6>"],"answer":"<2, 6>"},{"id":"U9-015","question":"The speed of a particle with r(t) = <3 cos t, 3 sin t> is:","options":["3","3t","9","1"],"answer":"3"},{"id":"U9-016","question":"Given x = 2t, y = t^2, dy/dx at t = 1 is:","options":["1","2","0.5","4"],"answer":"1"},{"id":"U9-017","question":"The polar curve r = θ is a:","options":["Spiral","Circle","Cardioid","Rose"],"answer":"Spiral"},{"id":"U9-018","question":"The area of one petal of r = sin(2θ) is:","options":["π/8","π/4","π/2","π"],"answer":"π/8"},{"id":"U9-019","question":"The area inside r = 2 + 2cos θ is:","options":["6π","4π","2π","8π"],"answer":"6π"},{"id":"U9-020","question":"The arc length of r = e^θ from θ = 0 to π is:","options":["√2(e^π - 1)","e^π - 1","(e^π - 1)/√2","√2 e^π"],"answer":"√2(e^π - 1)"},{"id":"U9-021","question":"For r = 3 sin θ, the Cartesian curve is a circle centered at:","options":["(0, 3/2)","(3/2, 0)","(0, 3)","(3, 0)"],"answer":"(0, 3/2)"},{"id":"U9-022","question":"The tangent to x = t^2, y = t^3 at t = 1 has slope:","options":["3/2","2/3","3","2"],"answer":"3/2"},{"id":"U9-023","question":"The displacement vector from t = 0 to t = 1 for r(t) = <t, t^2> is:","options":["<1, 1>","<0, 1>","<1, 0>","<1, 2>"],"answer":"<1, 1>"},{"id":"U9-024","question":"The speed at t = 1 for r(t) = <2t, t^2> is:","options":["2√2","2","√5","4"],"answer":"2√2"},{"id":"U9-025","question":"The polar equation r = 4 cos θ represents a circle with radius:","options":["2","4","1","8"],"answer":"2"},{"id":"U9-026","question":"The area of r = 1 + sin θ is:","options":["3π/2","π","2π","π/2"],"answer":"3π/2"},{"id":"U9-027","question":"The slope of the polar curve r = cos(2θ) at θ = 0 is:","options":["0","1","-1","∞"],"answer":"0"},{"id":"U9-028","question":"The parametric curve x = t^3, y = t^2 has a vertical tangent at:","options":["t = 0","t = 1","t = -1","t = 2"],"answer":"t = 0"},{"id":"U9-029","question":"The vector <3, 4> has magnitude:","options":["5","7","√7","25"],"answer":"5"},{"id":"U9-030","question":"If r(t) = <sin t, cos t>, |r'(t)| is:","options":["1","2","√2","0"],"answer":"1"},{"id":"U9-031","question":"The area enclosed by one loop of r^2 = 4 sin(2θ) is:","options":["2","4","π","1"],"answer":"2"},{"id":"U9-032","question":"The arc length of x = cos t, y = sin t for 0 ≤ t ≤ 2π is:","options":["2π","π","4π","π/2"],"answer":"2π"},{"id":"U9-033","question":"The slope of x = e^t cos t, y = e^t sin t at t = π/4 is:","options":["1","-1","0","∞"],"answer":"0"},{"id":"U9-034","question":"The position vector r(t) = <t^2, t^3>. The velocity at t = 1 is:","options":["<2, 3>","<1, 1>","<2, 1>","<1, 3>"],"answer":"<2, 3>"},{"id":"U9-035","question":"The distance traveled by r(t) = <t, t^2> from t = 0 to t = 1 is:","options":["(5√5 - 1)/4","(5√5 + 1)/4","√5/4","√5"],"answer":"(5√5 - 1)/4"},{"id":"U9-036","question":"The area inside r = 3 cos θ and outside r = 1 is:","options":["π/2 + √2","π/2 - √2","π/4","π"],"answer":"π/2 + √2"},{"id":"U9-037","question":"The Cartesian form of r = 4 sec θ is:","options":["x = 4","y = 4","x = -4","y = -4"],"answer":"x = 4"},{"id":"U9-038","question":"For x = 3t - t^3, y = 3t^2, dy/dx at t = 1 is:","options":["3","2","1","0"],"answer":"3"},{"id":"U9-039","question":"The arc length of r = θ from θ = 0 to 2π is approximately:","options":["21.26","20.5","12.4","6.28"],"answer":"21.26"},{"id":"U9-040","question":"The area of the region r = 2 sin(3θ) has how many petals?","options":["3","6","2","4"],"answer":"3"},{"id":"U9-041","question":"The unit tangent vector to r(t) = <t, t^2> at t = 1 is:","options":["<1, 2>/√5","<1, 1>/√2","<2, 1>/√5","<1, 2>"],"answer":"<1, 2>/√5"},{"id":"U9-042","question":"The area inside r = 2 cos θ and outside r = 1 is:","options":["π/3 + √3/2","π/3 - √3/2","π/2","π/6"],"answer":"π/3 + √3/2"},{"id":"U9-043","question":"The polar curve r = 1 - cos θ is a:","options":["Cardioid","Limaçon","Rose","Circle"],"answer":"Cardioid"},{"id":"U9-044","question":"The slope of x = t - sin t, y = 1 - cos t at t = π is:","options":["0","1","-1","∞"],"answer":"0"},{"id":"U9-045","question":"The perimeter (arc length) of r = 2 from θ = 0 to π is:","options":["2π","π","4π","2"],"answer":"2π"},{"id":"U9-046","question":"The area bounded by r = sec θ and the line θ = π/4 and θ = 0 is:","options":["1","1/2","ln 2","√2"],"answer":"1"},{"id":"U9-047","question":"The acceleration vector of r(t) = <t^3, t^2> is:","options":["<6t, 2>","<3t^2, 2t>","<6t^2, 2>","<6t, 2t>"],"answer":"<6t, 2>"},{"id":"U9-048","question":"The speed function for r(t) = <t, ln(cos t)> is:","options":["|sec t|","|cos t|","|tan t|","|sin t|"],"answer":"|sec t|"},{"id":"U9-049","question":"The area of one petal of r = 3 cos(3θ) is:","options":["3π/4","9π/4","3π/2","9π/8"],"answer":"3π/4"},{"id":"U9-050","question":"The length of the curve r = 1 from θ = 0 to π is:","options":["π","2π","1","π/2"],"answer":"π"},{"id":"U9-051","question":"The polar area formula is A =:","options":["(1/2)∫r² dθ","∫r dθ","∫r² dθ","(1/2)∫r dθ"],"answer":"(1/2)∫r² dθ"},{"id":"U9-052","question":"The parametric area formula is A =:","options":["∫y dx","∫x dy","∫y dy","∫x dx"],"answer":"∫y dx"},{"id":"U9-053","question":"The distance traveled by r(t) = <sin t, cos t> from t = 0 to 2π is:","options":["2π","π","4π","0"],"answer":"2π"},{"id":"U9-054","question":"The Cartesian form of r = 2 csc θ is:","options":["y = 2","x = 2","y = -2","x = -2"],"answer":"y = 2"},{"id":"U9-055","question":"The velocity of r(t) = <e^t, e^(-t)> is:","options":["<e^t, -e^(-t)>","<e^t, e^(-t)>","<e^(-t), e^t>","<-e^t, e^(-t)>"],"answer":"<e^t, -e^(-t)>"},{"id":"U9-056","question":"The slope of the polar curve r = 2 sin θ at θ = π/4 is:","options":["0","1","-1","∞"],"answer":"0"},{"id":"U9-057","question":"The area of the region inside r = 2 and outside r = 1 is:","options":["3π","2π","π","4π"],"answer":"3π"},{"id":"U9-058","question":"The acceleration of r(t) = <cos t, sin t> at t = 0 is:","options":["<-1, 0>","<0, -1>","<1, 0>","<0, 1>"],"answer":"<-1, 0>"},{"id":"U9-059","question":"The polar curve r = 4 sin(2θ) has how many petals?","options":["4","2","8","6"],"answer":"4"},{"id":"U9-060","question":"The arc length integral for r = cos θ is:","options":["∫sqrt(cos²θ + sin²θ) dθ","∫cos θ dθ","∫sin θ dθ","∫sqrt(cos θ) dθ"],"answer":"∫sqrt(cos²θ + sin²θ) dθ"},{"id":"U9-061","question":"For x = t^2, y = t^4, d²y/dx² at t = 1 is:","options":["2","4","1","0"],"answer":"2"},{"id":"U9-062","question":"The area enclosed by r = 2 sin θ is:","options":["π","2π","π/2","4π"],"answer":"π"},{"id":"U9-063","question":"The speed at t = π for r(t) = <2cos t, 2sin t> is:","options":["2","4","0","π"],"answer":"2"},{"id":"U9-064","question":"The polar equation θ = π/4 represents:","options":["A line","A circle","A spiral","A parabola"],"answer":"A line"},{"id":"U9-065","question":"The area inside r = 1 + cos θ and outside r = 1 is:","options":["1 + π/4","1 - π/4","π/4","2"],"answer":"1 + π/4"},{"id":"U9-066","question":"The length of the curve x = t, y = (2/3)t^(3/2) from t = 0 to 3 is:","options":["(2/3)(8 - 1)","14/3","2/3","8/3"],"answer":"14/3"},{"id":"U9-067","question":"The slope of the tangent to r = 2 + sin θ at θ = π/2 is:","options":["-1","1","0","2"],"answer":"0"},{"id":"U9-068","question":"The area of the region r = cos(2θ) has total area:","options":["π/4","π/2","π","2π"],"answer":"π/4"},{"id":"U9-069","question":"The vector <−1, 2> has magnitude:","options":["√5","3","√3","5"],"answer":"√5"},{"id":"U9-070","question":"The position vector r(t) = <cos t, sin t, t> describes:","options":["A helix","A circle","A line","A parabola"],"answer":"A helix"}]},{"unit":10,"title":"Infinite Sequences and Series","problems":[{"id":"U10-001","question":"Does the series Σ(1/n) converge or diverge?","options":["Diverges","Converges","Converges conditionally","Cannot be determined"],"answer":"Diverges"},{"id":"U10-002","question":"Does the series Σ(1/n^2) converge or diverge?","options":["Converges","Diverges","Converges conditionally","Oscillates"],"answer":"Converges"},{"id":"U10-003","question":"What is the sum of the geometric series Σ(1/2)^n from n=1 to ∞?","options":["1","2","1/2","4"],"answer":"1"},{"id":"U10-004","question":"The geometric series Σ ar^n converges if:","options":["|r| < 1","|r| > 1","r = 1","r = -1"],"answer":"|r| < 1"},{"id":"U10-005","question":"What is the Maclaurin series for e^x?","options":["Σ(x^n/n!)","Σ(x^n)","Σ(x^n/n)","Σ(nx^n)"],"answer":"Σ(x^n/n!)"},{"id":"U10-006","question":"What is the Maclaurin series for sin x?","options":["Σ(-1)^n x^(2n+1)/(2n+1)!","Σ(-1)^n x^(2n)/(2n)!","Σ x^(2n+1)/(2n+1)!","Σ x^n/n!"],"answer":"Σ(-1)^n x^(2n+1)/(2n+1)!"},{"id":"U10-007","question":"What is the Maclaurin series for cos x?","options":["Σ(-1)^n x^(2n)/(2n)!","Σ(-1)^n x^(2n+1)/(2n+1)!","Σ x^(2n)/(2n)!","Σ x^n/n!"],"answer":"Σ(-1)^n x^(2n)/(2n)!"},{"id":"U10-008","question":"The series Σ(1/n^p) converges if:","options":["p > 1","p < 1","p = 1","p ≥ 1"],"answer":"p > 1"},{"id":"U10-009","question":"Does Σ(1/n^1.5) converge?","options":["Converges","Diverges","Cannot determine","Oscillates"],"answer":"Converges"},{"id":"U10-010","question":"What is the interval of convergence for Σ(x^n)?","options":["(-1, 1)","[-1, 1]","(-1, 1]","(-∞, ∞)"],"answer":"(-1, 1)"},{"id":"U10-011","question":"What is the interval of convergence for Σ(x^n/n!)?","options":["(-∞, ∞)","(-1, 1)","[-1, 1]","(0, ∞)"],"answer":"(-∞, ∞)"},{"id":"U10-012","question":"Using the Ratio Test, Σ(n! / n^n) does what?","options":["Converges","Diverges","Inconclusive","Oscillates"],"answer":"Converges"},{"id":"U10-013","question":"The alternating series Σ(-1)^n/n does what?","options":["Converges conditionally","Converges absolutely","Diverges","Oscillates"],"answer":"Converges conditionally"},{"id":"U10-014","question":"The series Σ(-1)^n/n^2 does what?","options":["Converges absolutely","Converges conditionally","Diverges","Oscillates"],"answer":"Converges absolutely"},{"id":"U10-015","question":"What is the first term of the Taylor series for f(x) = ln x centered at x = 1?","options":["(x-1)","(x-1)^2/2","1","x"],"answer":"(x-1)"},{"id":"U10-016","question":"The Taylor series for ln(1+x) is:","options":["x - x²/2 + x³/3 - ...","x + x²/2 + x³/3 + ...","1 - x + x² - ...","x - x² + x³ - ..."],"answer":"x - x²/2 + x³/3 - ..."},{"id":"U10-017","question":"The sum of Σ(1/n!) from n=0 to ∞ is:","options":["e","e-1","1","e+1"],"answer":"e"},{"id":"U10-018","question":"The series Σ(n/(n+1)) does what?","options":["Diverges (terms don't approach 0)","Converges to 0","Converges to 1","Converges to e"],"answer":"Diverges (terms don't approach 0)"},{"id":"U10-019","question":"The nth term test for divergence states: if lim a_n ≠ 0, then Σa_n:","options":["Diverges","Converges","May converge","Cannot determine"],"answer":"Diverges"},{"id":"U10-020","question":"Does the series Σ(1/√n) converge?","options":["Diverges (p-series with p = 1/2)","Converges","Cannot determine","Converges conditionally"],"answer":"Diverges (p-series with p = 1/2)"},{"id":"U10-021","question":"The radius of convergence for Σ(n! x^n) is:","options":["0","1","∞","e"],"answer":"0"},{"id":"U10-022","question":"The series 1 - 1/3 + 1/5 - 1/7 + ... equals:","options":["π/4","π/2","π","1"],"answer":"π/4"},{"id":"U10-023","question":"The Maclaurin series for 1/(1-x) is:","options":["Σx^n for |x| < 1","Σ(-1)^n x^n","Σx^n for all x","Σx^n/n"],"answer":"Σx^n for |x| < 1"},{"id":"U10-024","question":"The Maclaurin series for arctan x is:","options":["Σ(-1)^n x^(2n+1)/(2n+1)","Σ(-1)^n x^(2n)/(2n)","Σx^(2n+1)/(2n+1)","Σx^n/n"],"answer":"Σ(-1)^n x^(2n+1)/(2n+1)"},{"id":"U10-025","question":"The coefficient of x^3 in the Maclaurin series of sin x is:","options":["-1/6","1/6","1/3","-1/3"],"answer":"-1/6"},{"id":"U10-026","question":"What is the sum of Σ(2/3)^n from n=0 to ∞?","options":["3","2","1","3/2"],"answer":"3"},{"id":"U10-027","question":"The series Σ(n^2/n!) does what?","options":["Converges","Diverges","Cannot determine","Converges conditionally"],"answer":"Converges"},{"id":"U10-028","question":"The Taylor polynomial of degree 2 for f(x) = e^x at x = 0 is:","options":["1 + x + x²/2","1 + x","x + x²/2","1 + x + x²"],"answer":"1 + x + x²/2"},{"id":"U10-029","question":"The Taylor series for cos x centered at 0 has only:","options":["Even powers of x","Odd powers of x","All powers of x","Negative powers of x"],"answer":"Even powers of x"},{"id":"U10-030","question":"Does Σ(1/(n ln n)) converge?","options":["Diverges","Converges","Cannot determine","Converges conditionally"],"answer":"Diverges"},{"id":"U10-031","question":"The Integral Test requires the function to be:","options":["Positive, continuous, and decreasing","Increasing","Odd","Even"],"answer":"Positive, continuous, and decreasing"},{"id":"U10-032","question":"The series Σ(3^n/n!) does what?","options":["Converges","Diverges","Inconclusive","Converges conditionally"],"answer":"Converges"},{"id":"U10-033","question":"The radius of convergence for Σ(x^n/n) is:","options":["1","∞","0","e"],"answer":"1"},{"id":"U10-034","question":"The series Σ(n/(n²+1)) does what?","options":["Diverges","Converges","Converges conditionally","Oscillates"],"answer":"Diverges"},{"id":"U10-035","question":"The coefficient of x^2 in the Taylor series of e^(2x) at x = 0 is:","options":["2","4","1","2/2"],"answer":"2"},{"id":"U10-036","question":"The series Σ(2^n/n^2) does what?","options":["Diverges","Converges","Inconclusive","Converges conditionally"],"answer":"Diverges"},{"id":"U10-037","question":"The alternating harmonic series converges to:","options":["ln 2","1","e","0"],"answer":"ln 2"},{"id":"U10-038","question":"The p-series Σ(1/n^3) converges to approximately:","options":["1.202","0.5","2","1.5"],"answer":"1.202"},{"id":"U10-039","question":"The series Σ(1/(2n+1)!) does what?","options":["Converges","Diverges","Inconclusive","Converges to e"],"answer":"Converges"},{"id":"U10-040","question":"The Taylor series of f(x) = 1/(1-x) centered at 0 is valid for:","options":["|x| < 1","|x| > 1","all x","x > 0"],"answer":"|x| < 1"},{"id":"U10-041","question":"The sum of the alternating series 1 - 1/2 + 1/4 - 1/8 + ... is:","options":["2/3","1/3","1","2"],"answer":"2/3"},{"id":"U10-042","question":"The Maclaurin series for e^(-x) is:","options":["Σ(-1)^n x^n/n!","Σx^n/n!","Σ(-1)^n x^(2n)/n!","Σ(-x)^n"],"answer":"Σ(-1)^n x^n/n!"},{"id":"U10-043","question":"The series Σ(n/(n!)) does what?","options":["Converges to e","Diverges","Converges to 1","Converges to e-1"],"answer":"Converges to e"},{"id":"U10-044","question":"The alternating series test requires the terms to:","options":["Decrease to 0 in absolute value","Increase","Remain constant","Be positive"],"answer":"Decrease to 0 in absolute value"},{"id":"U10-045","question":"The series Σ((n+1)/n) does what?","options":["Diverges (terms → 1 ≠ 0)","Converges to 0","Converges to 1","Converges to e"],"answer":"Diverges (terms → 1 ≠ 0)"},{"id":"U10-046","question":"The Taylor polynomial of degree 3 for sin x at x = 0 is:","options":["x - x^3/6","x + x^3/6","1 - x^2/2","x - x^2/2"],"answer":"x - x^3/6"},{"id":"U10-047","question":"The interval of convergence for Σ((x-2)^n/n) has center at:","options":["x = 2","x = 0","x = 1","x = -2"],"answer":"x = 2"},{"id":"U10-048","question":"The series Σ(1/(n^2 + 1)) does what?","options":["Converges","Diverges","Inconclusive","Oscillates"],"answer":"Converges"},{"id":"U10-049","question":"The sum of Σ(1/3^n) from n=1 to ∞ is:","options":["1/2","1/3","2/3","1"],"answer":"1/2"},{"id":"U10-050","question":"The series Σ(sin n/n^2) does what?","options":["Converges absolutely","Diverges","Converges conditionally","Oscillates"],"answer":"Converges absolutely"},{"id":"U10-051","question":"The Taylor series for 1/(1+x) is:","options":["1 - x + x² - x³ + ...","1 + x + x² + x³ + ...","x - x² + x³ - ...","1 - x² + x⁴ - ..."],"answer":"1 - x + x² - x³ + ..."},{"id":"U10-052","question":"The series Σ(n!/100^n) does what?","options":["Diverges","Converges","Inconclusive","Converges conditionally"],"answer":"Diverges"},{"id":"U10-053","question":"The sum of the series Σ(1/(n(n+1))) from n=1 to ∞ is:","options":["1","1/2","2","0"],"answer":"1"},{"id":"U10-054","question":"The coefficient of x^4 in the Maclaurin series of cos x is:","options":["1/24","-1/24","1/12","-1/12"],"answer":"1/24"},{"id":"U10-055","question":"The series Σ(-1)^n(2/3)^n does what?","options":["Converges to 3/5","Converges to -3/5","Diverges","Converges to 3/2"],"answer":"Converges to 3/5"},{"id":"U10-056","question":"The Taylor series for sqrt(1+x) at x = 0 begins with:","options":["1 + x/2","1 + x","x + x²","1 + x/3"],"answer":"1 + x/2"},{"id":"U10-057","question":"The radius of convergence for Σ((x-1)^n/2^n) is:","options":["2","1","1/2","∞"],"answer":"2"},{"id":"U10-058","question":"The series Σ(1/(n!)) from n=0 to ∞ equals:","options":["e","e-1","1","e+1"],"answer":"e"},{"id":"U10-059","question":"The series Σ(1/n^4) is approximately:","options":["1.082","1.202","1.5","0.5"],"answer":"1.082"},{"id":"U10-060","question":"The Taylor series of f(x) = e^x centered at x = 1 is:","options":["e Σ(x-1)^n/n!","Σ(x-1)^n/n!","Σx^n/n!","e Σx^n"],"answer":"e Σ(x-1)^n/n!"},{"id":"U10-061","question":"The series Σ((-1)^n/n!) equals:","options":["1/e","e","-e","1"],"answer":"1/e"},{"id":"U10-062","question":"The alternating series error bound for Σ(-1)^n/n with n ≥ 5 is approximately:","options":["< 1/5","< 1/25","< 1/4","< 1/10"],"answer":"< 1/5"},{"id":"U10-063","question":"The series Σ(1/(n^2)) converges to:","options":["π²/6","π/4","e","1"],"answer":"π²/6"},{"id":"U10-064","question":"The Taylor polynomial of degree 1 for f(x) = ln x at x = 1 is:","options":["(x-1)","x","1","x - 1 - (x-1)²/2"],"answer":"(x-1)"},{"id":"U10-065","question":"The series Σ((n!)^2/(2n)!) does what?","options":["Converges","Diverges","Inconclusive","Converges conditionally"],"answer":"Converges"},{"id":"U10-066","question":"The radius of convergence for Σ(x^n/n!) is:","options":["∞","1","0","e"],"answer":"∞"},{"id":"U10-067","question":"The series Σ(1/n^(1/2)) does what?","options":["Diverges","Converges","Converges conditionally","Cannot determine"],"answer":"Diverges"},{"id":"U10-068","question":"The Maclaurin series for e^(2x) has coefficient of x^2 equal to:","options":["2","4","1","2/2"],"answer":"2"},{"id":"U10-069","question":"The series Σ((-1)^(n+1)/n) converges to:","options":["ln 2","1","e","π/4"],"answer":"ln 2"},{"id":"U10-070","question":"The sum of Σ(1/n!) from n=1 to ∞ is:","options":["e - 1","e","1","e + 1"],"answer":"e - 1"}]}]}</script>
+
+  <script>
+  (function () {
+    "use strict";
+
+    var PER_UNIT = 15;
+    var LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+    var THEME_KEY = "calc-practice-theme";
+
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    var refs = {
+      app: document.getElementById("app"),
+      errorPanel: document.getElementById("errorPanel"),
+      errorMessage: document.getElementById("errorMessage"),
+      examTitle: document.getElementById("examTitle"),
+      overallText: document.getElementById("overallText"),
+      overallFill: document.getElementById("overallFill"),
+      overallCorrect: document.getElementById("overallCorrect"),
+      overallMissed: document.getElementById("overallMissed"),
+      unitList: document.getElementById("unitList"),
+      unitEyebrow: document.getElementById("unitEyebrow"),
+      unitTitle: document.getElementById("unitTitle"),
+      unitStats: document.getElementById("unitStats"),
+      reviewBtn: document.getElementById("reviewBtn"),
+      qCounter: document.getElementById("qCounter"),
+      qMode: document.getElementById("qMode"),
+      qId: document.getElementById("qId"),
+      qText: document.getElementById("qText"),
+      options: document.getElementById("options"),
+      feedback: document.getElementById("feedback"),
+      prevBtn: document.getElementById("prevBtn"),
+      nextBtn: document.getElementById("nextBtn"),
+      qNav: document.getElementById("qNav"),
+      themeBtn: document.getElementById("themeBtn"),
+      refreshBtn: document.getElementById("refreshBtn")
+    };
+
+    var state = {
+      exam: "Practice",
+      units: [],
+      active: 0,
+      review: false,
+      ready: false
+    };
+
+    var unitRows = [];
+    var lastViewKey = "";
+
+    /* ---------- helpers ---------- */
+
+    function shuffle(items) {
+      var arr = items.slice();
+      for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+      }
+      return arr;
+    }
+
+    function missedIndices(unit) {
+      var out = [];
+      for (var i = 0; i < unit.questions.length; i++) {
+        var answer = unit.answers[i];
+        if (answer !== null && answer !== unit.questions[i].correctIndex) out.push(i);
+      }
+      return out;
+    }
+
+    function visibleIndices(unit) {
+      if (!state.review) return unit.questions.map(function (_, i) { return i; });
+      var missed = missedIndices(unit);
+      if (missed.length) return missed;
+      return unit.questions.map(function (_, i) { return i; });
+    }
+
+    function unitStats(unit) {
+      var answered = 0;
+      var correct = 0;
+      for (var i = 0; i < unit.questions.length; i++) {
+        var answer = unit.answers[i];
+        if (answer !== null) {
+          answered++;
+          if (answer === unit.questions[i].correctIndex) correct++;
+        }
+      }
+      return { answered: answered, correct: correct, missed: answered - correct };
+    }
+
+    function totals() {
+      var sum = { total: 0, answered: 0, correct: 0, missed: 0 };
+      state.units.forEach(function (unit) {
+        sum.total += unit.questions.length;
+        var s = unitStats(unit);
+        sum.answered += s.answered;
+        sum.correct += s.correct;
+        sum.missed += s.missed;
+      });
+      return sum;
+    }
+
+    function statChip(label, tone) {
+      var chip = document.createElement("span");
+      chip.className = "stat";
+      if (tone) {
+        var dot = document.createElement("span");
+        dot.className = "dot " + tone;
+        chip.appendChild(dot);
+      }
+      chip.appendChild(document.createTextNode(label));
+      return chip;
+    }
+
+    function sourceUnitCount(raw) {
+      return raw && Array.isArray(raw.units) ? raw.units.length : 0;
+    }
+
+    function isValidData(raw) {
+      return !!(raw && Array.isArray(raw.units) && raw.units.some(function (unit) {
+        return unit && Array.isArray(unit.problems) && unit.problems.some(function (problem) {
+          return problem &&
+            typeof problem.question === "string" &&
+            Array.isArray(problem.options) &&
+            problem.options.length >= 2 &&
+            problem.answer !== undefined;
+        });
+      }));
+    }
+
+    /* ---------- data ---------- */
+
+    function buildUnits(raw) {
+      var units = [];
+
+      raw.units.forEach(function (rawUnit, unitIndex) {
+        if (!rawUnit || !Array.isArray(rawUnit.problems)) return;
+
+        var pool = rawUnit.problems.filter(function (problem) {
+          return problem &&
+            typeof problem.question === "string" &&
+            Array.isArray(problem.options) &&
+            problem.options.length >= 2 &&
+            problem.answer !== undefined;
+        });
+        if (!pool.length) return;
+
+        var picked = shuffle(pool).slice(0, PER_UNIT);
+
+        var questions = picked.map(function (problem, questionIndex) {
+          var answerText = String(problem.answer);
+          var shuffledOptions = shuffle(problem.options.map(function (optionText) {
+            return {
+              text: String(optionText),
+              correct: String(optionText) === answerText
+            };
+          }));
+
+          return {
+            id: String(problem.id || ("U" + (rawUnit.unit || unitIndex + 1) + "-" + (questionIndex + 1))),
+            text: String(problem.question),
+            options: shuffledOptions,
+            correctIndex: shuffledOptions.findIndex(function (option) { return option.correct; })
+          };
+        });
+
+        units.push({
+          number: rawUnit.unit || unitIndex + 1,
+          title: String(rawUnit.title || ("Unit " + (rawUnit.unit || unitIndex + 1))),
+          questions: questions,
+          answers: new Array(questions.length).fill(null),
+          cursor: 0
+        });
+      });
+
+      if (!units.length) throw new Error("No usable problems were found in problems.json.");
+      return units;
+    }
+
+    function initQuiz(raw) {
+      state.exam = raw.exam || "AP Calculus Practice";
+      state.units = buildUnits(raw);
+      state.active = 0;
+      state.review = false;
+      state.ready = true;
+
+      refs.examTitle.textContent = state.exam;
+      document.title = state.exam + " · Unit Practice";
+
+      buildSidebar();
+      syncThemeButton();
+      render();
+    }
+
+    /* ---------- sidebar ---------- */
+
+    function buildSidebar() {
+      refs.unitList.replaceChildren();
+      unitRows = [];
+
+      state.units.forEach(function (unit, index) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "unit-btn";
+        btn.title = unit.title;
+        btn.setAttribute("aria-current", "false");
+        btn.addEventListener("click", function () { selectUnit(index); });
+
+        var num = document.createElement("span");
+        num.className = "unit-num";
+        num.textContent = String(unit.number);
+
+        var body = document.createElement("span");
+        body.className = "unit-body";
+
+        var name = document.createElement("span");
+        name.className = "unit-name";
+        name.textContent = unit.title;
+
+        var meter = document.createElement("span");
+        meter.className = "unit-meter";
+        var fill = document.createElement("span");
+        meter.appendChild(fill);
+
+        body.appendChild(name);
+        body.appendChild(meter);
+
+        var count = document.createElement("span");
+        count.className = "unit-count";
+        count.textContent = "0/" + unit.questions.length;
+
+        btn.appendChild(num);
+        btn.appendChild(body);
+        btn.appendChild(count);
+        refs.unitList.appendChild(btn);
+
+        unitRows.push({ btn: btn, num: num, name: name, fill: fill, count: count });
+      });
+    }
+
+    function updateSidebar() {
+      var all = totals();
+
+      refs.overallText.textContent = all.answered + " / " + all.total;
+      refs.overallFill.style.width = all.total ? (all.answered / all.total * 100) + "%" : "0%";
+      refs.overallCorrect.textContent = all.correct + " correct";
+      refs.overallMissed.textContent = all.missed + " missed";
+
+      state.units.forEach(function (unit, index) {
+        var row = unitRows[index];
+        if (!row) return;
+
+        var answered = unitStats(unit).answered;
+        var complete = answered === unit.questions.length;
+
+        row.btn.classList.toggle("is-active", index === state.active);
+        row.btn.classList.toggle("is-done", complete);
+        row.btn.setAttribute("aria-current", index === state.active ? "true" : "false");
+        row.btn.setAttribute(
+          "aria-label",
+          "Unit " + unit.number + ": " + unit.title + ". " + answered + " of " + unit.questions.length + " answered."
+        );
+        row.fill.style.width = (answered / unit.questions.length * 100) + "%";
+        row.count.textContent = answered + "/" + unit.questions.length;
+      });
+    }
+
+    /* ---------- main render ---------- */
+
+    function render() {
+      if (!state.ready) return;
+      updateSidebar();
+      renderMain();
+    }
+
+    function renderMain() {
+      var unit = state.units[state.active];
+      var missed = missedIndices(unit);
+
+      if (state.review && !missed.length) state.review = false;
+
+      var list = visibleIndices(unit);
+      if (!list.length) return;
+
+      if (unit.cursor >= list.length) unit.cursor = list.length - 1;
+      if (unit.cursor < 0) unit.cursor = 0;
+
+      var originalIndex = list[unit.cursor];
+      var question = unit.questions[originalIndex];
+      var chosen = unit.answers[originalIndex];
+      var stats = unitStats(unit);
+
+      refs.unitEyebrow.textContent = "Unit " + unit.number + " of " + state.units.length;
+      refs.unitTitle.textContent = unit.title;
+
+      refs.unitStats.replaceChildren(
+        statChip(unit.questions.length + " questions"),
+        statChip(stats.answered + " answered", stats.answered ? "accent" : ""),
+        statChip(stats.correct + " correct", stats.correct ? "green" : ""),
+        statChip(stats.missed + " missed", stats.missed ? "red" : "")
+      );
+
+      if (state.review) {
+        refs.reviewBtn.disabled = false;
+        refs.reviewBtn.classList.add("is-active");
+        refs.reviewBtn.textContent = "Exit review";
+      } else if (missed.length) {
+        refs.reviewBtn.disabled = false;
+        refs.reviewBtn.classList.remove("is-active");
+        refs.reviewBtn.textContent = "Review missed (" + missed.length + ")";
+      } else {
+        refs.reviewBtn.disabled = true;
+        refs.reviewBtn.classList.remove("is-active");
+        refs.reviewBtn.textContent = "Review missed";
+      }
+
+      refs.qCounter.textContent = state.review
+        ? "Missed " + (unit.cursor + 1) + " of " + list.length
+        : "Question " + (unit.cursor + 1) + " of " + list.length;
+      refs.qMode.hidden = !state.review;
+      refs.qId.textContent = question.id;
+      refs.qText.textContent = question.text;
+
+      refs.options.replaceChildren();
+      question.options.forEach(function (option, optionIndex) {
+        var answered = chosen !== null;
+        var isCorrect = optionIndex === question.correctIndex;
+        var isChosen = chosen === optionIndex;
+
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option";
+
+        if (answered) {
+          btn.classList.add("is-locked");
+          btn.setAttribute("aria-disabled", "true");
+          if (isCorrect) btn.classList.add("is-correct");
+          else if (isChosen) btn.classList.add("is-wrong");
+          else btn.classList.add("is-idle");
+        }
+
+        var key = document.createElement("span");
+        key.className = "option-key";
+        key.textContent = LETTERS[optionIndex] || String(optionIndex + 1);
+
+        var text = document.createElement("span");
+        text.className = "option-text";
+        text.textContent = option.text;
+
+        var mark = document.createElement("span");
+        mark.className = "option-mark";
+        if (answered && isCorrect) mark.textContent = "✓";
+        else if (answered && isChosen) mark.textContent = "✕";
+
+        btn.appendChild(key);
+        btn.appendChild(text);
+        btn.appendChild(mark);
+
+        var label = (LETTERS[optionIndex] || String(optionIndex + 1)) + ". " + option.text;
+        if (answered) {
+          if (isCorrect) label += " — correct answer";
+          else if (isChosen) label += " — your answer, incorrect";
+        }
+        btn.setAttribute("aria-label", label);
+
+        btn.addEventListener("click", function () {
+          answerQuestion(originalIndex, optionIndex, document.activeElement === btn);
+        });
+
+        refs.options.appendChild(btn);
+      });
+
+      refs.feedback.className = "feedback";
+      if (chosen === null) {
+        refs.feedback.textContent = "Choose the best answer. Your set stays put while you move between units.";
+      } else if (question.correctIndex < 0) {
+        refs.feedback.classList.add("is-wrong");
+        refs.feedback.textContent = "This question is missing a valid answer key.";
+      } else if (chosen === question.correctIndex) {
+        refs.feedback.classList.add("is-correct");
+        refs.feedback.textContent = "✓ Correct.";
+      } else {
+        refs.feedback.classList.add("is-wrong");
+        refs.feedback.textContent = "✕ Not quite — the correct answer is " + question.options[question.correctIndex].text + ".";
+      }
+
+      refs.prevBtn.disabled = unit.cursor === 0;
+      refs.nextBtn.disabled = unit.cursor >= list.length - 1;
+
+      refs.qNav.replaceChildren();
+      list.forEach(function (questionIndex, position) {
+        var answer = unit.answers[questionIndex];
+        var chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "q-chip";
+        chip.textContent = String(questionIndex + 1);
+
+        var status = "unanswered";
+        if (answer !== null) {
+          if (answer === unit.questions[questionIndex].correctIndex) {
+            chip.classList.add("is-correct");
+            status = "correct";
+          } else {
+            chip.classList.add("is-wrong");
+            status = "incorrect";
+          }
+        }
+        if (position === unit.cursor) {
+          chip.classList.add("is-current");
+          chip.setAttribute("aria-current", "true");
+        }
+        chip.setAttribute("aria-label", "Question " + (questionIndex + 1) + ", " + status);
+
+        chip.addEventListener("click", function () {
+          unit.cursor = position;
+          renderMain();
+          var current = refs.qNav.querySelector(".is-current");
+          if (current) current.focus({ preventScroll: true });
+        });
+
+        refs.qNav.appendChild(chip);
+      });
+
+      var viewKey = state.active + ":" + originalIndex + ":" + (state.review ? "review" : "all");
+      if (viewKey !== lastViewKey) {
+        lastViewKey = viewKey;
+        if (!reduceMotion.matches && refs.qText.animate) {
+          var timing = { duration: 190, easing: "cubic-bezier(.2,.7,.3,1)" };
+          refs.qText.animate(
+            [{ opacity: 0, transform: "translateY(5px)" }, { opacity: 1, transform: "translateY(0)" }],
+            timing
+          );
+          refs.options.animate(
+            [{ opacity: 0, transform: "translateY(4px)" }, { opacity: 1, transform: "translateY(0)" }],
+            timing
+          );
+        }
+      }
+    }
+
+    /* ---------- interactions ---------- */
+
+    function answerQuestion(questionIndex, optionIndex, restoreFocus) {
+      var unit = state.units[state.active];
+      if (unit.answers[questionIndex] !== null) return;
+
+      unit.answers[questionIndex] = optionIndex;
+      render();
+
+      if (restoreFocus) {
+        var buttons = refs.options.children;
+        if (buttons[optionIndex]) buttons[optionIndex].focus({ preventScroll: true });
+      }
+    }
+
+    function step(delta) {
+      var unit = state.units[state.active];
+      var list = visibleIndices(unit);
+      var next = unit.cursor + delta;
+      if (next < 0 || next >= list.length) return;
+
+      var focusInNav = refs.qNav.contains(document.activeElement);
+      unit.cursor = next;
+      renderMain();
+      if (focusInNav) {
+        var current = refs.qNav.querySelector(".is-current");
+        if (current) current.focus({ preventScroll: true });
+      }
+    }
+
+    function selectUnit(index) {
+      if (index === state.active) return;
+
+      var currentUnit = state.units[state.active];
+      if (state.review) {
+        var list = visibleIndices(currentUnit);
+        currentUnit.cursor = list[currentUnit.cursor] != null ? list[currentUnit.cursor] : 0;
+      }
+
+      state.review = false;
+      state.active = index;
+      lastViewKey = "";
+      render();
+    }
+
+    function toggleReview() {
+      var unit = state.units[state.active];
+
+      if (state.review) {
+        var currentList = visibleIndices(unit);
+        var original = currentList[unit.cursor] != null ? currentList[unit.cursor] : 0;
+        state.review = false;
+        unit.cursor = original;
+      } else {
+        var missed = missedIndices(unit);
+        if (!missed.length) return;
+
+        var currentOriginal = unit.cursor;
+        var position = missed.indexOf(currentOriginal);
+        state.review = true;
+        unit.cursor = position >= 0 ? position : 0;
+      }
+
+      lastViewKey = "";
+      render();
+    }
+
+    function onKeydown(event) {
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (!state.ready) return;
+
+      var target = event.target;
+      if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
+
+      var unit = state.units[state.active];
+      var list = visibleIndices(unit);
+      var questionIndex = list[unit.cursor];
+      if (questionIndex == null) return;
+
+      var key = event.key;
+      if (/^[a-dA-D]$/.test(key) || /^[1-4]$/.test(key)) {
+        if (unit.answers[questionIndex] !== null) return;
+        var optionIndex = /^[1-4]$/.test(key) ? Number(key) - 1 : key.toLowerCase().charCodeAt(0) - 97;
+        if (optionIndex < unit.questions[questionIndex].options.length) {
+          event.preventDefault();
+          answerQuestion(questionIndex, optionIndex, true);
+        }
+        return;
+      }
+
+      if (key === "ArrowLeft") {
+        event.preventDefault();
+        step(-1);
+      } else if (key === "ArrowRight") {
+        event.preventDefault();
+        step(1);
+      }
+    }
+
+    /* ---------- theme ---------- */
+
+    function syncThemeButton() {
+      var dark = document.documentElement.dataset.theme === "dark";
+      refs.themeBtn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+      refs.themeBtn.title = dark ? "Switch to light mode" : "Switch to dark mode";
+    }
+
+    refs.themeBtn.addEventListener("click", function () {
+      var next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+      syncThemeButton();
+    });
+
+    refs.refreshBtn.addEventListener("click", function () { window.location.reload(); });
+    refs.prevBtn.addEventListener("click", function () { step(-1); });
+    refs.nextBtn.addEventListener("click", function () { step(1); });
+    refs.reviewBtn.addEventListener("click", toggleReview);
+    document.addEventListener("keydown", onKeydown);
+
+    /* ---------- boot ---------- */
+
+    function showError(message) {
+      refs.app.hidden = true;
+      refs.errorPanel.hidden = false;
+      refs.errorMessage.textContent = message;
+    }
+
+    async function boot() {
+      var raw = null;
+      var source = "embedded snapshot";
+
+      if (window.location.protocol !== "file:") {
+        try {
+          var response = await fetch("problems.json", { cache: "no-store" });
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          var live = await response.json();
+          if (!isValidData(live)) throw new Error("Unexpected problems.json shape");
+          raw = live;
+          source = "problems.json";
+        } catch (err) {
+          /* Fall back to the embedded snapshot below. */
+        }
+      }
+
+      if (!raw) {
+        try {
+          var embedded = document.getElementById("embeddedData");
+          raw = JSON.parse(embedded.textContent);
+        } catch (parseError) {
+          showError("The problem data could not be read.");
+          return;
+        }
+      }
+
+      if (!isValidData(raw)) {
+        showError("No usable problems were found. Check that problems.json has a units array with problems.");
+        return;
+      }
+
+      try {
+        initQuiz(raw);
+        console.info("[practice] Loaded " + state.units.length + " units (" + sourceUnitCount(raw) + " in source) from " + source + ".");
+      } catch (err) {
+        showError(err && err.message ? err.message : "Could not build the quiz.");
+      }
+    }
+
+    syncThemeButton();
+    boot();
+  })();
+  </script>
+</body>
+</html>
