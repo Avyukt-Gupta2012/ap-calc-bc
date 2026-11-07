@@ -1123,6 +1123,16 @@
       return arr;
     }
 
+    /* Some choices refer to other choices by their letter ("Both A and C").
+       Shuffling those would break the letters, so keep their original order. */
+    function referencesOptionLetters(text) {
+      var s = String(text);
+      return /\b(?:both|either)\b[^.]{0,24}\b[A-E]\b/i.test(s) ||
+        /\b[A-E]\s*(?:and|or|&|,)\s*[A-E]\b/i.test(s) ||
+        /\b(?:options?|choices?)\s+[A-E]\b/i.test(s) ||
+        /\b(?:all|none)\s+of\s+the\s+above\b/i.test(s);
+    }
+
     function missedIndices(unit) {
       var out = [];
       for (var i = 0; i < unit.questions.length; i++) {
